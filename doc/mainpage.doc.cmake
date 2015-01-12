@@ -1,6 +1,6 @@
 /*! 
 
-\mainpage Camera localization for augmented reality: A tutorial and survey
+\mainpage Camera localization for augmented reality: a hands-on survey
 
 \tableofcontents
 
@@ -13,7 +13,7 @@ Augmented Reality (AR) has now progressed to the point where real-time applicati
 
 \code
 E. Marchand, H. Uchiyama and F. Spindler. Camera localization for augmented reality:
-A tutorial and survey. submitted
+a hands-on survey. submitted
 \endcode
 
   a brief but almost self contented introduction to the most important approaches dedicated to camera localization along with a survey of the extension that have been proposed in the recent years. We also try to link these methodological concepts to the main libraries and SDK available on the market. 
