@@ -1,0 +1,68 @@
+/**
+
+\page tutorial-pose-dementhon Pose from Dementhon's POSIT method
+\tableofcontents
+
+\section intro Introduction
+
+An alternative and very elegant solution to pose estimation from points has been proposed in \cite DD95
+\cite ODD96.
+
+\section dementhon_code Source code
+
+The following source code also available in pose-dementhon.cpp allows to compute the pose of the camera from points.
+
+\include pose-dementhon.cpp
+
+\section dementon_explained Source code explained
+
+First of all we inlude the header of the files that are requested to manipulate vectors and matrices.
+
+\snippet pose-dementhon.cpp Include
+
+Then we introduce the function that does the pose estimation. It takes as input parameters \f${^w}{\bf X} = (X,Y,Z,1)^T\f$ the 3D coordinates of the points in the world frame and \f${\bf x} = (x,y,1)^T\f$ their normalized coordinates in the image plane. It returns the estimated pose as an homogeneous matrix transformation.
+
+\snippet pose-dementhon.cpp Estimation function
+
+The implementation of the POSIT algorithm is done next. 
+\snippet pose-dementhon.cpp POSIT
+
+After a minimal number of iterations, all the parameters are estimated and can be used to update the value of the homogenous transformation.
+
+\snippet pose-dementhon.cpp Update homogeneous matrix
+
+Finally we define the main() function in which we will initialize the input data before calling the previous function and computing the pose using Dementhon POSIT algorithm.
+
+\snippet pose-dementhon.cpp Main function
+
+First in the main() we create the data structures that will contain the 3D points coordinates \e wX in the world frame, their coordinates in the camera frame \e cX and their coordinates in the image plane \e x obtained after prerspective projection. Note here that at least 4 non coplanar points are requested to estimate the pose. 
+
+\snippet pose-dementhon.cpp Create data structures
+
+For our simulation we then initialize the input data from a ground truth pose \e cTw_truth. 
+For each point we set the values (cX, cY, cZ) corresponding to the 3D coordinates of the points in the camera frame and their coordinates (x, y) in the image plane.
+
+\snippet pose-dementhon.cpp Simulation
+
+From here we have initialized \f${^w}{\bf X} = (X,Y,Z,1)^T\f$ and \f${\bf x} = (x,y,1)^T\f$. We are now ready to call the function that does the pose estimation.
+
+\snippet pose-dementhon.cpp Call function
+
+\section dementhon_result Resulting pose estimation
+
+If you run the previous code, it we produce the following result that shows that the estimated pose is very close to the ground truth one used to generate the input data:
+
+\code
+cTw (ground truth):
+0.7072945484  -0.706170438  0.03252282796  -0.1  
+0.706170438  0.7036809008  -0.078463382  0.1  
+0.03252282796  0.078463382  0.9963863524  0.5  
+0  0  0  1  
+cTw (from Dementhon):
+0.6172726698  -0.7813181607  0.09228425059  -0.1070274014  
+0.690659622  0.4249461799  -0.5851581245  0.174123354  
+0.4179788298  0.4249391234  0.8019325685  0.5236967119  
+0  0  0  1 
+\endcode
+
+*/
