@@ -1,4 +1,4 @@
-//! \example pose-dementhon.cpp
+//! \example pose-dementhon-visp.cpp
 
 //! [Include]
 #include <visp/vpColVector.h>
@@ -8,11 +8,11 @@
 
 //! [Estimation function]
 vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const std::vector< vpColVector > &x)
+//! [Estimation function]
 {
-  //! [Estimation function]
   //! [POSIT]
   int npoints = (int)wX.size();
-  vpColVector r1(3), r2(3), r3;
+  vpColVector r1, r2, r3;
   vpMatrix A(npoints, 4);
   for(int i = 0; i < npoints; i++) {
     for (int j = 0; j < 4; j++) {
@@ -57,24 +57,20 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
     tx = tz * I[3][0];
     ty = tz * J[3][0];
 
-    vpRowVector r3_0(4);
-    r3_0[0] = r3[0];
-    r3_0[1] = r3[1];
-    r3_0[2] = r3[2];
-    r3_0[3] = 0;
-
     // Update epsilon_i
     for(int i = 0; i < npoints; i++)
-      eps[i] = (r3_0 * wX[i]) / tz;
+      eps[i] = (r3[0] * wX[i][0] + r3[1] * wX[i][1] + r3[2] * wX[i][2]) / tz;
   }
   //! [POSIT]
 
   //! [Update homogeneous matrix]
   vpHomogeneousMatrix cTw;
+  // Update translation vector
   cTw[0][3] = tx;
   cTw[1][3] = ty;
   cTw[2][3] = tz;
   cTw[3][3] = 1.;
+  // update rotation matrix
   for(int i = 0; i < 3; i++) {
     cTw[0][i] = r1[i];
     cTw[1][i] = r2[i];
@@ -87,17 +83,15 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
 
 //! [Main function]
 int main()
+//! [Main function]
 {
-  //! [Main function]
   //! [Create data structures]
   int npoints = 4;
-  std::vector< vpColVector > wX(npoints);
-  std::vector< vpColVector > cX(npoints);
-  std::vector< vpColVector > x(npoints);
+  std::vector< vpColVector > wX(npoints); // 3D points
+  std::vector< vpColVector >  x(npoints); // Their 2D coordinates in the image plane
 
   for (int i = 0; i < npoints; i++) {
     wX[i].resize(4);
-    cX[i].resize(4);
     x[i].resize(3);
   }
   //! [Create data structures]
@@ -115,9 +109,9 @@ int main()
 
   // Input data: 2D coordinates of the points on the image plane
   for(int i = 0; i < npoints; i++) {
-    cX[i] = cTw_truth * wX[i];     // Update cX, cY, cZ
-    x[i][0] = cX[i][0] / cX[i][2]; // x = cX/cZ
-    x[i][1] = cX[i][1] / cX[i][2]; // y = cY/cZ
+    vpColVector cX = cTw_truth * wX[i];     // Update cX, cY, cZ
+    x[i][0] = cX[0] / cX[2]; // x = cX/cZ
+    x[i][1] = cX[1] / cX[2]; // y = cY/cZ
     x[i][2] = 1.;
   }
   //! [Simulation]

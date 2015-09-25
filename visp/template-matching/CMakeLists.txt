@@ -1,4 +1,4 @@
-project(tutorial-template-matching)
+project(template-matching-visp)
 
 cmake_minimum_required(VERSION 2.6)
 
@@ -6,7 +6,7 @@ find_package(VISP REQUIRED)
 
 # set the list of source files
 set(tutorial_cpp
-  template-matching.cpp)
+  template-matching-visp.cpp)
 
 list(APPEND tutorial_data "${CMAKE_CURRENT_SOURCE_DIR}/bruegel.mpg")
 
@@ -23,5 +23,5 @@ endforeach()
 
 # Copy the data files to the same location than the target
 foreach(data ${tutorial_data})
-  visp_copy_data(template-matching.cpp ${data})
+  visp_copy_data(template-matching-visp.cpp ${data})
 endforeach()

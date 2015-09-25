@@ -1,6 +1,6 @@
 /**
 
-\page tutorial-template-matching Direct motion estimation through template matching
+\page tutorial-template-matching-visp Direct motion estimation through template matching
 \tableofcontents
 
 \section intro Introduction
@@ -24,20 +24,20 @@ The video below shows the result of the template tracking applied on a painting.
 
 \section tt_code Source code
 
-The following source code also available in template-matching.cpp allows to estimate the homography between the current image and the reference template defined by the user in the first image of the video. The reference template is here defined from a set of triangles. These triangles should rely on the same plane to estimate a consistant homography.
+The following source code also available in template-matching-visp.cpp allows to estimate the homography between the current image and the reference template defined by the user in the first image of the video. The reference template is here defined from a set of triangles. These triangles should rely on the same plane to estimate a consistant homography.
 
-\include template-matching.cpp
+\include template-matching-visp.cpp
 
 \section tt_explained Source code explained
 
 Hereafter is the description of the most important lines in this example. The template tracking is performed using vpTemplateTrackerSSDForwardAdditional class implemented in <a href="http://team.inria.fr/lagadic/ViSP">ViSP</a>.
 Let us denote that "SSDForwardAdditional" refers to the similarity function used for the image registration. In ViSP, we have implemented two different similarity functions: the "Sum of Square Differences" (vpTemplateTrackerSSD classes \cite Baker04a) and the "Zero-mean Normalized Cross Correlation" (vpTemplateTrackerZNCC classes \cite Irani98a). Both methods can be used in different ways: Inverse Compositional, Forward Compositional, Forward Additional, or ESM.
 
-\snippet template-matching.cpp Include
+\snippet template-matching-visp.cpp Include
 
 Here we include the header of the vpTemplateTrackerSSDForwardAdditional class that allows to track the template. Actually, the tracker estimates the displacement of the template in the current image according to its initial pose. The computed displacement can be represented by multiple transformations, also called warps (vpTemplateTrackerWarp classes). In this example, we include the header vpTemplateTrackerWarpHomography class to define the possible transformation of the template as an homography.
 
-\snippet template-matching.cpp Construction
+\snippet template-matching-visp.cpp Construction
 
 Once the tracker is created with the desired warp function, parameters can be tuned to be more consistent with the expected behavior. Depending on these parameters the perfomances of the tracker in terms of processing time and estimation could be affected. Since here we deal with 640 by 480 pixel wide images, the images are significantly subsampled in order to reduce the time of the image processing to be compatible with real-time.
 
@@ -51,7 +51,7 @@ Once the tracker is created with the desired warp function, parameters can be tu
 
 The last step of the initialization is to select the template that will be tracked during the sequence. 
 
-\snippet template-matching.cpp Init
+\snippet template-matching-visp.cpp Init
 
 The vpTemplateTracker classes proposed in ViSP offer you the possibility to defined your template as multiple planar triangles. When calling the previous line, you will have to specify the triangles that define the template.
 
@@ -62,17 +62,17 @@ If ViSP is build with OpenCV, we also provide an initialization with automatic t
 
 Next, in the infinite while loop, after displaying the next image, we track the object on a new image I.
 
-\snippet template-matching.cpp Track
+\snippet template-matching-visp.cpp Track
 
 If you need to get the parameters of the current transformation of the template, it can be done by calling:
 
-\snippet template-matching.cpp Homography
+\snippet template-matching-visp.cpp Homography
 
 For further information about the warping parameters, see the following \ref warp_tt section. 
 
 Then according to the computed transformation obtained from the last call to track() function, next line is used to display the template using red lines.
 
-\snippet template-matching.cpp Display
+\snippet template-matching-visp.cpp Display
 
 \subsection warp_tt Warping classes
 
@@ -161,7 +161,7 @@ By increasing this root mean square threshold value, the algorithm will reduce i
 
 \subsection points_tt How to get the points of the template
 
-The previous code provided in tutorial-template-tracker.cpp can be modified to get the coordinates of the corners of the triangles that define the zone to track. To this end, as shown in the next lines, before the while loop we first define a reference zone and the corresponding warped zone. Then in the loop, we update the warped zone using the parameters of the warping model that is estimated by the tracker. From the warped zone, we extract all the triangles, and then for each triangles, we get the corners coordinates. 
+The previous code provided in tutorial-template-tracker-visp.cpp can be modified to get the coordinates of the corners of the triangles that define the zone to track. To this end, as shown in the next lines, before the while loop we first define a reference zone and the corresponding warped zone. Then in the loop, we update the warped zone using the parameters of the warping model that is estimated by the tracker. From the warped zone, we extract all the triangles, and then for each triangles, we get the corners coordinates. 
 
 \code
   // Instantiate and get the reference zone

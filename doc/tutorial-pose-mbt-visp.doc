@@ -1,9 +1,9 @@
 /**
 
-\page tutorial-pose-mbt Pose from markerless model-based tracking
+\page tutorial-pose-mbt-visp Pose from markerless model-based tracking
 \tableofcontents
 
-\section intro Introduction
+\section intro_mbt Introduction
 
 Various authors have proposed different formulations of the pose
 estimation problem which does not require the need of markers or
@@ -20,32 +20,32 @@ The video below shows the result of a tea box model-based tracking.
 
 \section pose_mbt_code Source code
 
-The following source code also available in pose-mbt.cpp allows to compute the pose of the camera wrt. the object that is tracked.
+The following source code also available in pose-mbt-visp.cpp allows to compute the pose of the camera wrt. the object that is tracked.
 
-\include pose-mbt.cpp
+\include pose-mbt-visp.cpp
 
 \section pose_mbt_explained Source code explained
 
 Hereafter is the description of the most important lines in this example.
 
-\snippet pose-mbt.cpp Include
+\snippet pose-mbt-visp.cpp Include
 
 Here we include the header of the vpMbEdgeTracker class that allows to track an object from its cad model using moving-edges. The tracker will use image \c I and the intrinsic camera parameters \c cam as input. 
 
-\snippet pose-mbt.cpp Image
+\snippet pose-mbt-visp.cpp Image
 
 As output, it will estimate \c cTw, the pose of the object in the camera frame.
 
-\snippet pose-mbt.cpp cTw
+\snippet pose-mbt-visp.cpp cTw
 
 Once the input image \c teabox.pgm is loaded in \c I, a window is created and initialized with image \c I. Then we create an instance of the tracker.
 
-\snippet pose-mbt.cpp Constructor
+\snippet pose-mbt-visp.cpp Constructor
 
 There are then two different ways to initialize the tracker.
 
 - The first one, if libxml2 is available, is to read the settings from \c teabox.xml input file if the file exists. 
-\snippet pose-mbt.cpp Load xml
+\snippet pose-mbt-visp.cpp Load xml
 The content of the xml file is the following:
 \code
 <?xml version="1.0"?>
@@ -78,27 +78,27 @@ The content of the xml file is the following:
 \endcode
 
 - The second one consists in initializing the parameters directly in the source code: 
-\snippet pose-mbt.cpp Set parameters
+\snippet pose-mbt-visp.cpp Set parameters
 
 
 Now we are ready to load the cad model of the object. ViSP supports cad model in cao format or in vrml format. The cao format is a particular format only supported by ViSP. It doesn't require an additional 3rd party rather then vrml format that require Coin 3rd party. 
 
 First we check if the file exists, then we load the cad model in cao format with:
-\snippet pose-mbt.cpp Load cao
+\snippet pose-mbt-visp.cpp Load cao
 The file \c teabox.cao describes first the vertices of the box, then the edges that corresponds to the faces. A more complete description of this file is provided in \ref tracking_mb_cao. The next figure gives the index of the vertices that are defined in \c teabox.cao.
 
 If the cad model in cao format doesn't exist, we check then if it exists in vrml format before loading:
-\snippet pose-mbt.cpp Load wrl
+\snippet pose-mbt-visp.cpp Load wrl
 
 As for the cao format, \c teabox.wrl describes first the vertices of the box, then the edges that corresponds to the faces. A more complete description of this file is provided in \ref tracking_mb_wrl.
 
 \image html img-teabox-cao.jpg Index of the vertices used to model the tea box in cao format.
 
 Once the model of the object to track is loaded, with the next line the display in the image window of additional drawings in overlay such as the moving edges positions, is then enabled by:
-\snippet pose-mbt.cpp Set display
+\snippet pose-mbt-visp.cpp Set display
 
 Now we have to initialize the tracker. With the next line we choose to use a user interaction. 
-\snippet pose-mbt.cpp Init
+\snippet pose-mbt-visp.cpp Init
 
 The user has to click in the image on four vertices with their 3D coordinates defined in the "teabox.init" file. The following image shows where the user has to click.
 
@@ -121,14 +121,14 @@ Here the user has to click on vertex 0, 3, 2 and 5 in the window that displays i
 
 Next, in the infinite while loop, after displaying the next image, we track the object on a new image \c I.
 
-\snippet pose-mbt.cpp Track
+\snippet pose-mbt-visp.cpp Track
 
 The result of the tracking is a pose \c cTw that could be obtained by:
-\snippet pose-mbt.cpp Get pose
+\snippet pose-mbt-visp.cpp Get pose
 
 Next lines are used first to retrieve the camera parameters used by the tracker, then to display the visible part of the cad model using red lines with 2 as thickness, and finally to display the object frame at the estimated position \c cTw. Each axis of the frame are 0.025 meters long. Using vpColor::none indicates that x-axis is displayed in red, y-axis in green, while z-axis in blue. The thickness of the axis is 3.
 
-\snippet pose-mbt.cpp Display
+\snippet pose-mbt-visp.cpp Display
 
 \section model Object modeling
 

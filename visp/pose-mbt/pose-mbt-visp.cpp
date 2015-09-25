@@ -1,4 +1,4 @@
-//! \example pose-mbt.cpp
+//! \example pose-mbt-visp.cpp
 #include <visp/vpDisplayGDI.h>
 #include <visp/vpDisplayOpenCV.h>
 #include <visp/vpDisplayX.h>

@@ -1,10 +1,8 @@
-project(camera_localization)
+project(camera-localization)
 cmake_minimum_required(VERSION 2.6)
 
-#----------------------------------------------------------------------
-# Try to find ViSP third party library
-#----------------------------------------------------------------------
-find_package(VISP REQUIRED)
+option(WITH_OPENCV "Implementation using OpenCV structures" ON)
+option(WITH_VISP "Implementation using OpenCV structures" ON)
 
 #----------------------------------------------------------------------
 # Try to find doxygen for documentation generation
@@ -26,8 +24,10 @@ endif()
 #----------------------------------------------------------------------
 # Propagate in sub directories
 #----------------------------------------------------------------------
-subdirs(homography-basis)
-subdirs(pose-basis)
-subdirs(pose-mbt)
-subdirs(template-matching)
+if(WITH_VISP)
+  add_subdirectory(visp)
+endif()
 
+if(WITH_OPENCV)
+  add_subdirectory(opencv)
+endif()

@@ -4,7 +4,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "Camera localization for augmented reality"
+PROJECT_NAME           = "Pose estimation for augmented reality"
 PROJECT_NUMBER         =
 PROJECT_BRIEF          =
 PROJECT_LOGO           =
@@ -98,26 +98,29 @@ WARN_LOGFILE           = warning.log
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = @PROJECT_SOURCE_DIR@ \
-                         @PROJECT_SOURCE_DIR@/homography-basis \
-                         @PROJECT_SOURCE_DIR@/pose-basis \
-                         @PROJECT_SOURCE_DIR@/pose-mbt \
-                         @PROJECT_SOURCE_DIR@/template-matching \
+                         @PROJECT_SOURCE_DIR@/visp/pose-basis \
+                         @PROJECT_SOURCE_DIR@/visp/homography-basis \
+                         @PROJECT_SOURCE_DIR@/visp/pose-mbt \
+                         @PROJECT_SOURCE_DIR@/visp/template-matching \
+                         @PROJECT_SOURCE_DIR@/opencv/pose-basis \
+                         @PROJECT_SOURCE_DIR@/opencv/homography-basis \
                          @PROJECT_SOURCE_DIR@/doc \
                          @PROJECT_BINARY_DIR@/doc 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.cpp *.doc
-RECURSIVE              = NO
+RECURSIVE              = YES
 EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
-EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@ \
-                         @PROJECT_SOURCE_DIR@/homography-basis \
-                         @PROJECT_SOURCE_DIR@/pose-basis \
-                         @PROJECT_SOURCE_DIR@/pose-mbt \
-                         @PROJECT_SOURCE_DIR@/template-matching
+EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/visp/pose-basis \
+                         @PROJECT_SOURCE_DIR@/visp/homography-basis \
+                         @PROJECT_SOURCE_DIR@/visp/pose-mbt \
+                         @PROJECT_SOURCE_DIR@/visp/template-matching \
+                         @PROJECT_SOURCE_DIR@/opencv/pose-basis \
+                         @PROJECT_SOURCE_DIR@/opencv/homography-basis
 EXAMPLE_PATTERNS       = *.cpp
-EXAMPLE_RECURSIVE      = NO
+EXAMPLE_RECURSIVE      = YES
 IMAGE_PATH             = @PROJECT_SOURCE_DIR@/doc/image
 INPUT_FILTER           =
 FILTER_PATTERNS        =

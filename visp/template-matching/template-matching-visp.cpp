@@ -1,4 +1,4 @@
-//! \example template-matching.cpp
+//! \example template-matching-visp.cpp
 #include <visp/vpDisplayGDI.h>
 #include <visp/vpDisplayX.h>
 #include <visp/vpDisplayOpenCV.h>

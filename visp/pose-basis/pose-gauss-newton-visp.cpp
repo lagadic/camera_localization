@@ -1,4 +1,4 @@
-//! \example pose-gauss-newton.cpp
+//! \example pose-gauss-newton-visp.cpp
 //! [Include]
 #include <visp/vpColVector.h>
 #include <visp/vpExponentialMap.h>
@@ -12,17 +12,14 @@ vpHomogeneousMatrix pose_gauss_newton(
     const
     #endif
     std::vector< vpColVector > &wX, const std::vector< vpColVector > &x, const vpHomogeneousMatrix &cTw)
+//! [Estimation function]
 {
-  //! [Estimation function]
   //! [Gauss-Newton]
   int npoints = (int)wX.size();
-  vpMatrix J(2*npoints, 6);
-  std::vector< vpColVector > cX(npoints);
-  double lambda = 0.25;
+  vpMatrix J(2*npoints, 6), Jp;
   vpColVector err, sd(2*npoints), s(2*npoints), xq(npoints*2), xn(npoints*2);
   vpHomogeneousMatrix cTw_ = cTw;
-  double residual=0, residual_prev;
-  vpMatrix Jp;
+  double residual=0, residual_prev, lambda = 0.25;
 
   // From input vector x = (x, y, 1)^T we create a new one xn = (x, y)^T to ease computation of e_q
   for (int i = 0; i < x.size(); i ++) {
@@ -33,23 +30,23 @@ vpHomogeneousMatrix pose_gauss_newton(
   // Iterative Gauss-Newton minimization loop
   do {
     for (int i = 0; i < npoints; i++) {
-      cX[i] = cTw_ * wX[i];                               // Update cX, cY, cZ
+      vpColVector cX = cTw_ * wX[i];                      // Update cX, cY, cZ
 
       // Update x(q)
-      xq[i*2]   = cX[i][0] / cX[i][2];                    // x(q) = cX/cZ
-      xq[i*2+1] = cX[i][1] / cX[i][2];                    // y(q) = cY/cZ
+      xq[i*2]   = cX[0] / cX[2];                          // x(q) = cX/cZ
+      xq[i*2+1] = cX[1] / cX[2];                          // y(q) = cY/cZ
 
       // Update J using equation (22)
-      J[i*2][0] = -1/cX[i][2];                            // -1/cZ
+      J[i*2][0] = -1/cX[2];                               // -1/cZ
       J[i*2][1] = 0;
-      J[i*2][2] = x[i][0] / cX[i][2];                     // x/cZ
+      J[i*2][2] = x[i][0] / cX[2];                        // x/cZ
       J[i*2][3] = x[i][0] * x[i][1];                      // xy
       J[i*2][4] = -(1 + x[i][0] * x[i][0]);               // -(1+x^2)
       J[i*2][5] = x[i][1];                                // y
 
       J[i*2+1][0] = 0;
-      J[i*2+1][1] = -1/cX[i][2];                          // -1/cZ
-      J[i*2+1][2] = x[i][1] / cX[i][2];                   // y/cZ
+      J[i*2+1][1] = -1/cX[2];                             // -1/cZ
+      J[i*2+1][2] = x[i][1] / cX[2];                      // y/cZ
       J[i*2+1][3] = 1 + x[i][1] * x[i][1];                // 1+y^2
       J[i*2+1][4] = -x[i][0] * x[i][1];                   // -xy
       J[i*2+1][5] = -x[i][1];                             // -x
@@ -67,22 +64,22 @@ vpHomogeneousMatrix pose_gauss_newton(
 
   } while (fabs(residual - residual_prev) > 0);
   //! [Gauss-Newton]
+  //! [Return cTw]
   return cTw_;
+  //! [Return cTw]
 }
 
 //! [Main function]
 int main()
+//! [Main function]
 {
-  //! [Main function]
   //! [Create data structures]
   int npoints = 4;
   std::vector< vpColVector > wX(npoints);
-  std::vector< vpColVector > cX(npoints);
   std::vector< vpColVector >  x(npoints);
 
   for (int i = 0; i < npoints; i++) {
     wX[i].resize(4);
-    cX[i].resize(4);
     x[i].resize(3);
   }
   //! [Create data structures]
@@ -100,9 +97,9 @@ int main()
 
   // Input data: 2D coordinates of the points on the image plane
   for(int i = 0; i < npoints; i++) {
-    cX[i] = cTw_truth * wX[i];     // Update cX, cY, cZ
-    x[i][0] = cX[i][0] / cX[i][2]; // x = cX/cZ
-    x[i][1] = cX[i][1] / cX[i][2]; // y = cY/cZ
+    vpColVector cX = cTw_truth * wX[i];     // Update cX, cY, cZ
+    x[i][0] = cX[0] / cX[2]; // x = cX/cZ
+    x[i][1] = cX[1] / cX[2]; // y = cY/cZ
     x[i][2] = 1;
   }
   //! [Simulation]

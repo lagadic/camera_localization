@@ -1,15 +1,14 @@
-//! \example homography-dlt.cpp
+//! \example pose-from-homography-dlt-visp.cpp
 //! [Include]
 #include <visp/vpColVector.h>
 #include <visp/vpHomogeneousMatrix.h>
 #include <visp/vpMatrix.h>
 //! [Include]
 
-//! [Estimation function]
+//! [Homography DLT function]
 vpMatrix homography_dlt(const std::vector< vpColVector > &x1, const std::vector< vpColVector > &x2)
-{ 
-  //! [Estimation function]
-  //! [DLT]
+//! [Homography DLT function]
+{
   int npoints = (int)x1.size();
   vpMatrix A(2*npoints, 9, 0.);
 
@@ -63,49 +62,76 @@ vpMatrix homography_dlt(const std::vector< vpColVector > &x1, const std::vector<
 #else
   vpColVector h = V.column(indexSmallestSv + 1); // Deprecated since ViSP 2.10.0
 #endif
-  std::cout << "h\n" << h << std::endl;
+
   if (h[8] < 0) // tz < 0
     h *=-1;
-  //! [DLT]
 
-  //! [Update homography matrix]
   vpMatrix _2H1(3, 3);
   for (int i = 0 ; i < 3 ; i++)
     for (int j = 0 ; j < 3 ; j++)
       _2H1[i][j] = h[3*i+j] ;
-  //! [Update homography matrix]
 
   return _2H1;
 }
 
+//! [Estimation function]
+vpHomogeneousMatrix pose_from_homography_dlt(const std::vector< vpColVector > &xw, const std::vector< vpColVector > &xo)
+//! [Estimation function]
+{
+  //! [Homography estimation]
+  vpMatrix oHw = homography_dlt(xw, xo);
+  //! [Homography estimation]
+
+  //! [Homography normalization]
+  // Normalization to ensure that ||c1|| = 1
+  double norm = sqrt(vpMath::sqr(oHw[0][0]) + vpMath::sqr(oHw[1][0]) + vpMath::sqr(oHw[2][0])) ;
+  oHw /= norm;
+  //! [Homography normalization]
+
+  //! [Extract c1, c2]
+  vpColVector c1 = oHw.getCol(0);
+  vpColVector c2 = oHw.getCol(1);
+  //! [Extract c1, c2]
+  //! [Compute c3]
+  vpColVector c3 = vpColVector::crossProd(c1, c2);
+  //! [Compute c3]
+
+  //! [Update pose]
+  vpHomogeneousMatrix oTw;
+  for(int i=0; i < 3; i++) {
+    oTw[i][0] = c1[i];
+    oTw[i][1] = c2[i];
+    oTw[i][2] = c3[i];
+    oTw[i][3] = oHw[i][2];
+  }
+  //! [Update pose]
+
+  return oTw;
+}
+
 //! [Main function]
 int main()
+//! [Main function]
 {
-  //! [Main function]
   //! [Create data structures]
   int npoints = 4;
 
-  std::vector< vpColVector > x1(npoints);
-  std::vector< vpColVector > x2(npoints);
-
   std::vector< vpColVector > wX(npoints);  // 3D points in the world plane
-  std::vector< vpColVector > c1X(npoints); // 3D points in the camera frame 1
-  std::vector< vpColVector > c2X(npoints); // 3D points in the camera frame 2
+
+  std::vector< vpColVector > xw(npoints);  // Normalized coordinates in the object frame
+  std::vector< vpColVector > xo(npoints);  // Normalized coordinates in the image plane
 
   for (int i = 0; i < npoints; i++) {
-    x1[i].resize(3);
-    x2[i].resize(3);
+    xw[i].resize(3);
+    xo[i].resize(3);
 
     wX[i].resize(4);
-    c1X[i].resize(4);
-    c2X[i].resize(4);
   }
   //! [Create data structures]
 
   //! [Simulation]
   // Ground truth pose used to generate the data
-  vpHomogeneousMatrix c1Tw_truth(-0.1, 0.1, 1.2, vpMath::rad(5), vpMath::rad(0), vpMath::rad(45));
-  vpHomogeneousMatrix c2Tc1(0.01, 0.01, 0.2, vpMath::rad(0), vpMath::rad(3), vpMath::rad(5));
+  vpHomogeneousMatrix oTw_truth(-0.1, 0.1, 1.2, vpMath::rad(5), vpMath::rad(0), vpMath::rad(45));
 
   // Input data: 3D coordinates of at least 4 coplanar points
   double L = 0.2;
@@ -116,23 +142,23 @@ int main()
 
   // Input data: 2D coordinates of the points on the image plane
   for(int i = 0; i < npoints; i++) {
-    c1X[i] = c1Tw_truth * wX[i];          // Update c1X, c1Y, c1Z
-    x1[i][0] = c1X[i][0] / c1X[i][2];     // x1 = c1X/c1Z
-    x1[i][1] = c1X[i][1] / c1X[i][2];     // y1 = c1Y/c1Z
-    x1[i][2] = 1;
+    vpColVector oX = oTw_truth * wX[i];          // Update oX, oY, oZ
+    xo[i][0] = oX[0] / oX[2];     // xo = oX/oZ
+    xo[i][1] = oX[1] / oX[2];     // yo = oY/oZ
+    xo[i][2] = 1;
 
-    c2X[i] = c2Tc1 * c1Tw_truth * wX[i];  // Update cX, cY, cZ
-    x2[i][0] = c2X[i][0] / c2X[i][2];     // x2 = c1X/c1Z
-    x2[i][1] = c2X[i][1] / c2X[i][2];     // y2 = c1Y/c1Z
-    x2[i][2] = 1;
+    xw[i][0] = wX[i][0];                // xw = wX
+    xw[i][1] = wX[i][1];                // xw = wY
+    xw[i][2] = 1;
   }
   //! [Simulation]
 
   //! [Call function]
-  vpMatrix _2H1 = homography_dlt(x1, x2);
+  vpHomogeneousMatrix oTw = pose_from_homography_dlt(xw, xo);
   //! [Call function]
 
-  std::cout << "2H1 (computed with DLT):\n" << _2H1 << std::endl;
+  std::cout << "oTw (ground truth):\n" << oTw_truth << std::endl;
+  std::cout << "oTw (computed with homography DLT):\n" << oTw << std::endl;
 
   return 0;
 }

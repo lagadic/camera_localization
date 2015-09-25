@@ -1,4 +1,4 @@
-project(tutorial-pose-mbt)
+project(pose-mbt-visp)
 
 cmake_minimum_required(VERSION 2.6)
 
@@ -6,7 +6,7 @@ find_package(VISP REQUIRED)
 
 # set the list of source files
 set(tutorial_cpp
-  pose-mbt.cpp)
+  pose-mbt-visp.cpp)
 
 list(APPEND tutorial_data "${CMAKE_CURRENT_SOURCE_DIR}/teabox.mpg")
 list(APPEND tutorial_data "${CMAKE_CURRENT_SOURCE_DIR}/teabox.xml")
@@ -28,5 +28,5 @@ endforeach()
 
 # Copy the data files to the same location than the target
 foreach(data ${tutorial_data})
-  visp_copy_data(pose-mbt.cpp ${data})
+  visp_copy_data(pose-mbt-visp.cpp ${data})
 endforeach()

@@ -1,4 +1,4 @@
-project(homography-basis)
+project(homography-basis-visp)
 cmake_minimum_required(VERSION 2.8)
 
 find_package(VISP REQUIRED)
@@ -6,8 +6,8 @@ find_package(VISP REQUIRED)
 include_directories(${VISP_INCLUDE_DIRS})
 
 set(tutorial_cpp
-  homography-dlt.cpp
-  pose-from-homography-dlt.cpp)
+  homography-dlt-visp.cpp
+  pose-from-homography-dlt-visp.cpp)
 
 foreach(cpp ${tutorial_cpp})
   # Compute the name of the binary to create
