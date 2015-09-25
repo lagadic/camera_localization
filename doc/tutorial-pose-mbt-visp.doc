@@ -20,7 +20,7 @@ The video below shows the result of a tea box model-based tracking.
 
 \section pose_mbt_code Source code
 
-The following source code also available in pose-mbt-visp.cpp allows to compute the pose of the camera wrt. the object that is tracked.
+The following source code also available in \ref pose-mbt-visp.cpp allows to compute the pose of the camera wrt. the object that is tracked.
 
 \include pose-mbt-visp.cpp
 

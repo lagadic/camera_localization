@@ -5,7 +5,9 @@
 #include <opencv2/calib3d/calib3d.hpp>
 //! [Include]
 
+//! [Homography DLT function]
 cv::Mat homography_dlt(const std::vector< cv::Point2d > &x1, const std::vector< cv::Point2d > &x2)
+//! [Homography DLT function]
 {
   //! [DLT]
   int npoints = (int)x1.size();
@@ -74,8 +76,8 @@ cv::Mat homography_dlt(const std::vector< cv::Point2d > &x1, const std::vector< 
 void pose_from_homography_dlt(const std::vector< cv::Point2d > &xw,
                               const std::vector< cv::Point2d > &xo,
                               cv::Mat &otw, cv::Mat &oRw)
+//! [Estimation function]
 {
-  //! [Estimation function]
   //! [Homography estimation]
   cv::Mat oHw = homography_dlt(xw, xo);
   //! [Homography estimation]
@@ -109,8 +111,8 @@ void pose_from_homography_dlt(const std::vector< cv::Point2d > &xw,
 
 //! [Main function]
 int main()
+//! [Main function]
 {
-  //! [Main function]
   //! [Create data structures]
   int npoints = 4;
 

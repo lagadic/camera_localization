@@ -24,7 +24,7 @@ The video below shows the result of the template tracking applied on a painting.
 
 \section tt_code Source code
 
-The following source code also available in template-matching-visp.cpp allows to estimate the homography between the current image and the reference template defined by the user in the first image of the video. The reference template is here defined from a set of triangles. These triangles should rely on the same plane to estimate a consistant homography.
+The following source code also available in \ref template-matching-visp.cpp allows to estimate the homography between the current image and the reference template defined by the user in the first image of the video. The reference template is here defined from a set of triangles. These triangles should rely on the same plane to estimate a consistant homography.
 
 \include template-matching-visp.cpp
 

@@ -7,8 +7,8 @@
 
 //! [Estimation function]
 vpMatrix homography_dlt(const std::vector< vpColVector > &x1, const std::vector< vpColVector > &x2)
-{ 
-  //! [Estimation function]
+//! [Estimation function]
+{
   //! [DLT]
   int npoints = (int)x1.size();
   vpMatrix A(2*npoints, 9, 0.);
@@ -80,8 +80,8 @@ vpMatrix homography_dlt(const std::vector< vpColVector > &x1, const std::vector<
 
 //! [Main function]
 int main()
+//! [Main function]
 {
-  //! [Main function]
   //! [Create data structures]
   int npoints = 4;
 

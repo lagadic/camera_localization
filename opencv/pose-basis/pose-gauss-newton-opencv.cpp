@@ -39,8 +39,8 @@ void exponential_map(const cv::Mat &v, cv::Mat dt, cv::Mat dR)
 void pose_gauss_newton(const std::vector< cv::Point3d > &wX,
                        const std::vector< cv::Point2d > &x,
                        cv::Mat &ctw, cv::Mat &cRw)
+//! [Estimation function]
 {
-  //! [Estimation function]
   //! [Gauss-Newton]
   int npoints = (int)wX.size();
   cv::Mat J(2*npoints, 6, CV_64F);
@@ -104,8 +104,8 @@ void pose_gauss_newton(const std::vector< cv::Point3d > &wX,
 
 //! [Main function]
 int main()
+//! [Main function]
 {
-  //! [Main function]
   //! [Create data structures]
   std::vector< cv::Point3d > wX;
   std::vector< cv::Point2d >  x;

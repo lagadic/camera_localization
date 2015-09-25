@@ -1,0 +1,89 @@
+/**
+
+\page tutorial-pose-dlt-planar-opencv Pose from homography estimation
+\tableofcontents
+
+\section intro_pose_dlt_cv_planar Introduction
+
+The homography can be decomposed to retrieve the pose. We consider here that all the points lie in the plane \f${^w}Z=0\f$.
+
+\section dlt_planar_code_cv Source code
+
+The following source code that uses <a href="http://opencv.org">OpenCV</a> is also available in \ref pose-from-homography-dlt-opencv.cpp file. It allows to compute the pose of the camera from at least 4 coplanar points.
+
+\include pose-from-homography-dlt-opencv.cpp
+
+\section dlt_planar_explained_cv Source code explained
+
+First of all we include OpenCV headers that are requested to manipulate vectors and matrices.
+
+\snippet pose-from-homography-dlt-opencv.cpp Include
+
+Then we introduce the function that does the homography estimation from coplanar points. This function is detailed in \ref tutorial-homography-opencv.
+
+\snippet pose-from-homography-dlt-opencv.cpp Homography DLT function
+
+Then we introduce the function that does the pose from homography estimation.
+\snippet pose-from-homography-dlt-opencv.cpp Estimation function
+
+Based on equation (37) \f${\bf x}_0 = {^0}{\bf H}_w {\bf x}_w\f$ we first estimate the homography \f${^0}{\bf H}_w\f$.
+\snippet pose-from-homography-dlt-opencv.cpp Homography estimation
+
+Then using the constraint that \f$||{\bf c}^0_1|| = 1\f$ we normalize the homography.
+
+\snippet pose-from-homography-dlt-opencv.cpp Homography normalization
+
+Let us denote \f${\bf M} = {\Pi}^{-1} \; {^0}{\bf H}_w\f$  
+
+Noting that matrix M is also equal to \f${\bf M} = ({\bf c}^0_1, {\bf c}^0_2, {^0}{\bf T}_w)\f$ we are able to extract the corresponding vectors.
+
+\snippet pose-from-homography-dlt-opencv.cpp Extract c1, c2
+
+The third column of the rotation matrix is computed such as \f${\bf c}^0_3= {\bf c}^0_1 \times {\bf c}^0_2\f$
+
+\snippet pose-from-homography-dlt-opencv.cpp Compute c3
+
+To finish we update the homogeneous transformation that corresponds to the estimated pose \f${^0}{\bf T}_w\f$.
+
+\snippet pose-from-homography-dlt-opencv.cpp Update pose
+
+Finally we define the main function in which we will initialize the input data before calling the previous function and computing the pose from the estimated homography.
+
+\snippet pose-from-homography-dlt-opencv.cpp Main function
+
+Then we create the data structures that will contain the 3D points coordinates \e wX in the world frame, their normalized coordinates \e xw in the world frame and their normalized coordinates \e xo in the image plane obtained by perspective projection. Note here that at least 4 coplanar points are requested to estimate the 8 parameters of the homography. 
+
+\snippet pose-from-homography-dlt-opencv.cpp Create data structures
+
+For our simulation we then initialize the input data from a ground truth pose with the translation in \e ctw_truth and the rotation matrix in \e cRw_truth. 
+For each point \e wX[i] we compute the perspective projection \e xo[i] = (xo, yo, 1). According to equation (37) we also set \f${\bf x}_w = ({^w}X, {^w}Y, 1)\f$ in \e xw vector.
+\snippet pose-from-homography-dlt-opencv.cpp Simulation
+
+From here we have initialized \f${\bf x_0} = (x_0,y_0,1)^T\f$ and \f${\bf x}_w = ({^w}X, {^w}Y, 1)^T\f$. We are now ready to call the function that does the pose estimation.
+
+\snippet pose-from-homography-dlt-opencv.cpp Call function
+
+\section dlt_planar_result_cv Resulting pose estimation
+
+If you run the previous code, it we produce the following result that shows that the estimated pose is equal to the ground truth one used to generate the input data:
+
+\code
+otw (ground truth):
+[-0.1;
+ 0.1;
+ 1.2]
+otw (computed with homography DLT):
+[-0.1;
+ 0.09999999999999999;
+ 1.2]
+oRw (ground truth):
+[0.7072945483755065, -0.7061704379962989, 0.03252282795827704;
+ 0.7061704379962989, 0.7036809008245869, -0.07846338199958876;
+ 0.03252282795827704, 0.07846338199958876, 0.9963863524490802]
+oRw (computed with homography DLT):
+[0.7072945483755065, -0.7061704379962993, 0.03252282795827707;
+ 0.7061704379962989, 0.7036809008245873, -0.07846338199958841;
+ 0.03252282795827677, 0.07846338199958854, 0.996386352449081]
+\endcode
+
+*/

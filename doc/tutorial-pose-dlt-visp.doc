@@ -9,7 +9,7 @@ Although PnP is intrinsically a non-linear problem, a simple solution known as D
 
 \section dlt_code Source code
 
-The following source code that uses <a href="http://visp.inria.fr">ViSP</a> is also available in pose-dlt.cpp file. It allows to compute the pose of the camera from points.
+The following source code that uses <a href="http://visp.inria.fr">ViSP</a> is also available in \ref pose-dlt-visp.cpp file. It allows to compute the pose of the camera from points.
 
 \include pose-dlt-visp.cpp
 
@@ -28,20 +28,20 @@ The implementation of the Direct Linear Transform algorithm is done next. First,
 \snippet pose-dlt-visp.cpp DLT
 
 From now the resulting eigen vector h that corresponds to the minimal
-eigen value of matrix A is used to update the homogenous transformation cTw:
+eigen value of matrix A is used to update the homogenous transformation \e cTw:
 
 \snippet pose-dlt-visp.cpp Update homogeneous matrix
 
-Finally we define the main() function in which we will initialize the input data before calling the previous function and computing the pose using DLT algorithm.
+Finally we define the main function in which we will initialize the input data before calling the previous function and computing the pose using DLT algorithm.
 
 \snippet pose-dlt-visp.cpp Main function
 
-First in the main() we create the data structures that will contain the 3D points coordinates \e wX in the world frame, their coordinates in the image plane \e x obtained after prerspective projection. Note here that at least 4 non coplanar points are requested to estimate the pose. 
+First in the main we create the data structures that will contain the 3D points coordinates \e wX in the world frame, their coordinates in the image plane \e x obtained after prerspective projection. Note here that at least 4 non coplanar points are requested to estimate the pose. 
 
 \snippet pose-dlt-visp.cpp Create data structures
 
 For our simulation we then initialize the input data from a ground truth pose \e cTw_truth. 
-For each point we set in wX[i] the 3D coordinates in the world frame (wX, wY, wZ, 1) and compute in cX their 3D coordinates (cX, cY, cZ, 1) in the camera frame. Then in x[i] we update their coordinates (x, y) in the image plane, obtained by perspective projection.
+For each point we set in \e wX[i] the 3D coordinates in the world frame (wX, wY, wZ, 1) and compute in \e cX their 3D coordinates (cX, cY, cZ, 1) in the camera frame. Then in \e x[i] we update their coordinates (x, y) in the image plane, obtained by perspective projection.
 
 \snippet pose-dlt-visp.cpp Simulation
 

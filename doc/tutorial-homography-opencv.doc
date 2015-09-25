@@ -1,26 +1,26 @@
 /**
 
-\page tutorial-homography-visp Homography estimation
+\page tutorial-homography-opencv Homography estimation
 \tableofcontents
 
-\section intro_homography Introduction
+\section intro_homography_cv Introduction
 
 The estimation of an homography from coplanar points can be easily and precisely achieved using a Direct Linear Transform algorithm \cite HZ01 \cite Sut74 based on the resolution of a linear system.
 
-\section homography_code Source code
+\section homography_code_cv Source code
 
-The following source code that uses <a href="http://visp.inria.fr">ViSP</a> is also available in \ref homography-dlt-visp.cpp file. It allows to estimate the homography between matched coplanar points. At least 4 points are required.
+The following source code that uses <a href="http://opencv.org">OpenCV</a> is also available in \ref homography-dlt-opencv.cpp file. It allows to estimate the homography between matched coplanar points. At least 4 points are required.
 
-\include homography-dlt-visp.cpp
+\include homography-dlt-opencv.cpp
 
-\section homography_explained Source code explained
+\section homography_explained_cv Source code explained
 
-First of all we inlude ViSP headers that are requested to manipulate vectors and matrices.
+First of all we inlude OpenCV headers that are requested to manipulate vectors and matrices.
 
-\snippet homography-dlt-visp.cpp Include
+\snippet homography-dlt-opencv.cpp Include
 
 Then we introduce the function that does the homography estimation.
-\snippet homography-dlt-visp.cpp Estimation function
+\snippet homography-dlt-opencv.cpp Estimation function
 
 From a vector of planar points \f${\bf x_1} = (x_1, y_1, 1)^T\f$ in image \f$I_1\f$ and a vector of matched points \f${\bf x_2} = (x_2, y_2, 1)^T\f$ in image \f$I_2\f$ it allows to estimate the homography \f$\bf {^2}H_1\f$:
 
@@ -28,39 +28,39 @@ From a vector of planar points \f${\bf x_1} = (x_1, y_1, 1)^T\f$ in image \f$I_1
 
 The implementation of the Direct Linear Transform algorithm to estimate \f$\bf {^2}H_1\f$ is done next. First, for each point we update the values of matrix A using equation (33). Then we solve the system \f${\bf Ah}=0\f$ using a Singular Value Decomposition of \f$\bf A\f$. Finaly, we determine the smallest eigen value that allows to identify the eigen vector that corresponds to the solution \f$\bf h\f$.
 
-\snippet homography-dlt-visp.cpp DLT
+\snippet homography-dlt-opencv.cpp DLT
 
 From now the resulting eigen vector \f$\bf h\f$ that corresponds to the minimal
 eigen value of matrix \f$\bf A\f$ is used to update the homography \f$\bf {^2}H_1\f$.
 
-\snippet homography-dlt-visp.cpp Update homography matrix
+\snippet homography-dlt-opencv.cpp Update homography matrix
 
 Finally we define the main function in which we will initialize the input data before calling the previous function.
 
-\snippet homography-dlt-visp.cpp Main function
+\snippet homography-dlt-opencv.cpp Main function
 
 First in the main we create the data structures that will contain the 3D points coordinates \e wX in the world frame, their coordinates in the camera frame 1 \e c1X and 2 \e c2X and their coordinates in the image plane \e x1 and \e x2 obtained after perspective projection. Note here that at least 4 coplanar points are requested to estimate the 8 parameters of the homography. 
 
-\snippet homography-dlt-visp.cpp Create data structures
+\snippet homography-dlt-opencv.cpp Create data structures
 
-For our simulation we then initialize the input data from a ground truth pose \e c1Tw_truth that corresponds to the pose of the camera in frame 1 with respect to the object frame. 
+For our simulation we then initialize the input data from a ground truth pose that corresponds to the pose of the camera in frame 1 with respect to the object frame; in \e c1tw_truth for the translation vector and in \e c1Rw_truth for the rotation matrix. 
 For each point, we compute their coordinates in the camera frame 1 \e c1X = (c1X, c1Y, c1Z). These values are then used to compute their coordinates in the image plane \e x1 = (x1, y1) using perspective projection.
 
-Thanks to the ground truth transformation \e c2Tc1 between camera frame 2 and camera frame 1, we compute also the coordinates of the points in camera frame 2 \e c2X = (c2X, c2Y, c2Z) and their corresponding coordinates \e x2 = (x2, y2) in the image plane.
-\snippet homography-dlt-visp.cpp Simulation
+Thanks to the ground truth transformation between camera frame 2 and camera frame 1 set in \e c2tc1 for the translation vector and in \e c2Rc1 for the rotation matrix, we compute also the coordinates of the points in camera frame 2 \e c2X = (c2X, c2Y, c2Z) and their corresponding coordinates \e x2 = (x2, y2) in the image plane.
+\snippet homography-dlt-opencv.cpp Simulation
 
 From here we have initialized \f${\bf x_1} = (x1,y1,1)^T\f$ and \f${\bf x_2} = (x2,y2,1)^T\f$. We are now ready to call the function that does the homography estimation.
 
-\snippet homography-dlt-visp.cpp Call function
+\snippet homography-dlt-opencv.cpp Call function
 
-\section homography_result Resulting homography estimation
+\section homography_result_cv Resulting homography estimation
 
 If you run the previous code, it we produce the following result that shows that the estimated pose is equal to the ground truth one used to generate the input data:
 
 \code
 2H1 (computed with DLT):
--0.5425233874  0.04785624324  -0.03308292557  
--0.04764480242  -0.5427592709  -0.005830349194  
-0.02550335177  0.005978041063  -0.6361649707 
+[0.5425233873981674, -0.04785624324415742, 0.03308292557420141;
+ 0.0476448024215215, 0.5427592708789931, 0.005830349194436123;
+ -0.02550335176952741, -0.005978041062955012, 0.6361649706821216]
 \endcode
 */

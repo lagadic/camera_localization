@@ -9,7 +9,7 @@ The homography can be decomposed to retrieve the pose. We consider here that all
 
 \section dlt_planar_code Source code
 
-The following source code that uses <a href="http://visp.inria.fr">ViSP</a> is also available in pose-from-homography-dlt-visp.cpp file. It allows to compute the pose of the camera from at least 4 coplanar points.
+The following source code that uses <a href="http://visp.inria.fr">ViSP</a> is also available in \ref pose-from-homography-dlt-visp.cpp file. It allows to compute the pose of the camera from at least 4 coplanar points.
 
 \include pose-from-homography-dlt-visp.cpp
 
@@ -47,7 +47,7 @@ To finish we update the homogeneous transformation that corresponds to the estim
 
 \snippet pose-from-homography-dlt-visp.cpp Update pose
 
-Finally we define the main() function in which we will initialize the input data before calling the previous function and computing the pose from the estimated homography.
+Finally we define the main function in which we will initialize the input data before calling the previous function and computing the pose from the estimated homography.
 
 \snippet pose-from-homography-dlt-visp.cpp Main function
 
@@ -56,7 +56,7 @@ Then we create the data structures that will contain the 3D points coordinates \
 \snippet pose-from-homography-dlt-visp.cpp Create data structures
 
 For our simulation we then initialize the input data from a ground truth pose \e oTw_truth. 
-For each point wX[i] we compute the perspective projection xo[i] = (xo, yo, 1). According to equation (37) we also set \f${\bf x}_w = ({^w}X, {^w}Y, 1)\f$ in \e xw vector.
+For each point \e wX[i] we compute the perspective projection \e xo[i] = (xo, yo, 1). According to equation (37) we also set \f${\bf x}_w = ({^w}X, {^w}Y, 1)\f$ in \e xw vector.
 \snippet pose-from-homography-dlt-visp.cpp Simulation
 
 From here we have initialized \f${\bf x_0} = (x_0,y_0,1)^T\f$ and \f${\bf x}_w = ({^w}X, {^w}Y, 1)^T\f$. We are now ready to call the function that does the pose estimation.

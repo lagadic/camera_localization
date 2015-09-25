@@ -8,8 +8,8 @@
 
 //! [Estimation function]
 void pose_dlt(const std::vector< cv::Point3d > &wX, const std::vector< cv::Point2d > &x, cv::Mat &ctw, cv::Mat &cRw)
+//! [Estimation function]
 {
-  //! [Estimation function]
   //! [DLT]
   int npoints = (int)wX.size();
   cv::Mat A(2*npoints, 12, CV_64F, cv::Scalar(0));
@@ -71,8 +71,8 @@ void pose_dlt(const std::vector< cv::Point3d > &wX, const std::vector< cv::Point
 
 //! [Main function]
 int main()
+//! [Main function]
 {
-  //! [Main function]
   //! [Create data structures]
   std::vector< cv::Point3d > wX;
   std::vector< cv::Point2d >  x;

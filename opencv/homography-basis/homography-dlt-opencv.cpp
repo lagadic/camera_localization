@@ -7,8 +7,8 @@
 
 //! [Estimation function]
 cv::Mat homography_dlt(const std::vector< cv::Point2d > &x1, const std::vector< cv::Point2d > &x2)
-{ 
-  //! [Estimation function]
+//! [Estimation function]
+{
   //! [DLT]
   int npoints = (int)x1.size();
   cv::Mat A(2*npoints, 9, CV_64F, cv::Scalar(0));
@@ -21,7 +21,7 @@ cv::Mat homography_dlt(const std::vector< cv::Point2d > &x1, const std::vector< 
 
   // Since the third line of matrix A is a linear combination of the first and second lines
   // (A is rank 2) we don't need to implement this third line
-  for(int i = 0; i < npoints; i++) {      // Update matrix A using eq. 33
+  for(int i = 0; i < npoints; i++) {              // Update matrix A using eq. 33
     A.at<double>(2*i,3) = -x1[i].x;               // -xi_1
     A.at<double>(2*i,4) = -x1[i].y;               // -yi_1
     A.at<double>(2*i,5) = -1;                     // -1
@@ -74,8 +74,8 @@ cv::Mat homography_dlt(const std::vector< cv::Point2d > &x1, const std::vector< 
 
 //! [Main function]
 int main()
+//! [Main function]
 {
-  //! [Main function]
   //! [Create data structures]
   std::vector< cv::Point2d > x1; // Points projected in the image plane linked to camera 1
   std::vector< cv::Point2d > x2; // Points projected in the image plane linked to camera 2

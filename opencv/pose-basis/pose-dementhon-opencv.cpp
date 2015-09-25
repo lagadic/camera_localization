@@ -10,8 +10,8 @@
 void pose_dementhon(const std::vector< cv::Point3d > &wX,
                     const std::vector< cv::Point2d > &x,
                     cv::Mat &ctw, cv::Mat &cRw)
+//! [Estimation function]
 {
-  //! [Estimation function]
   //! [POSIT]
   int npoints = (int)wX.size();
   cv::Mat r1, r2, r3;
@@ -86,8 +86,8 @@ void pose_dementhon(const std::vector< cv::Point3d > &wX,
 
 //! [Main function]
 int main()
+//! [Main function]
 {
-  //! [Main function]
   //! [Create data structures]
   std::vector< cv::Point3d > wX;
   std::vector< cv::Point2d >  x;

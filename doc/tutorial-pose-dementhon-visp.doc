@@ -9,7 +9,7 @@ An alternative and very elegant solution to pose estimation from points has been
 
 \section dementhon_code Source code
 
-The following source code that uses <a href="http://visp.inria.fr">ViSP</a> is also available in pose-dementhon-visp.cpp file. It allows to compute the pose of the camera from points.
+The following source code that uses <a href="http://visp.inria.fr">ViSP</a> is also available in \ref pose-dementhon-visp.cpp file. It allows to compute the pose of the camera from points.
 
 \include pose-dementhon-visp.cpp
 
@@ -30,16 +30,16 @@ After a minimal number of iterations, all the parameters are estimated and can b
 
 \snippet pose-dementhon-visp.cpp Update homogeneous matrix
 
-Finally we define the main() function in which we will initialize the input data before calling the previous function and computing the pose using Dementhon POSIT algorithm.
+Finally we define the main function in which we will initialize the input data before calling the previous function and computing the pose using Dementhon POSIT algorithm.
 
 \snippet pose-dementhon-visp.cpp Main function
 
-First in the main() we create the data structures that will contain the 3D points coordinates \e wX in the world frame, and their coordinates in the image plane \e x obtained after prerspective projection. Note here that at least 4 non coplanar points are requested to estimate the pose. 
+First in the main we create the data structures that will contain the 3D points coordinates \e wX in the world frame, and their coordinates in the image plane \e x obtained after prerspective projection. Note here that at least 4 non coplanar points are requested to estimate the pose. 
 
 \snippet pose-dementhon-visp.cpp Create data structures
 
 For our simulation we then initialize the input data from a ground truth pose \e cTw_truth. 
-For each point we set in wX[i] the 3D coordinates in the world frame (wX, wY, wZ, 1) and compute in cX their 3D coordinates (cX, cY, cZ, 1) in the camera frame. Then in x[i] we update their coordinates (x, y) in the image plane, obtained by perspective projection.
+For each point we set in \e wX[i] the 3D coordinates in the world frame (wX, wY, wZ, 1) and compute in \e cX their 3D coordinates (cX, cY, cZ, 1) in the camera frame. Then in \e x[i] we update their coordinates (x, y) in the image plane, obtained by perspective projection.
 
 \snippet pose-dementhon-visp.cpp Simulation
 
