@@ -14,7 +14,7 @@ void pose_dlt(const std::vector< cv::Point3d > &wX, const std::vector< cv::Point
   int npoints = (int)wX.size();
   cv::Mat A(2*npoints, 12, CV_64F, cv::Scalar(0));
   for(int i = 0; i < npoints; i++) { // Update matrix A using eq. 5
-    A.at<double>(2*i, 0) = wX[i].x; //wX[i][0] ;
+    A.at<double>(2*i, 0) = wX[i].x;
     A.at<double>(2*i, 1) = wX[i].y;
     A.at<double>(2*i, 2) = wX[i].z;
     A.at<double>(2*i, 3) = 1 ;

@@ -65,10 +65,10 @@ void pose_gauss_newton(const std::vector< cv::Point3d > &wX,
     for (int i = 0; i < npoints; i++) {
       cX = cRw * cv::Mat(wX[i]) + ctw;                      // Update cX, cY, cZ
       // Update x(q)
-      xq.at<double>(i*2,0)   = cX.at<double>(0,0) / cX.at<double>(2,0);                    // x(q) = cX/cZ
-      xq.at<double>(i*2+1,0) = cX.at<double>(1,0) / cX.at<double>(2,0);                    // y(q) = cY/cZ
+      xq.at<double>(i*2,0)   = cX.at<double>(0,0) / cX.at<double>(2,0); // x(q) = cX/cZ
+      xq.at<double>(i*2+1,0) = cX.at<double>(1,0) / cX.at<double>(2,0); // y(q) = cY/cZ
 
-      // Update J using equation (22)
+      // Update J using equation (11)
       J.at<double>(i*2,0) = -1/cX.at<double>(2,0);          // -1/cZ
       J.at<double>(i*2,1) = 0;
       J.at<double>(i*2,2) = x[i].x / cX.at<double>(2,0);    // x/cZ
@@ -84,10 +84,10 @@ void pose_gauss_newton(const std::vector< cv::Point3d > &wX,
       J.at<double>(i*2+1,5) = -x[i].y;                      // -x
     }
 
-    cv::Mat e_q = xq - xn;                                  // Equation (18)
+    cv::Mat e_q = xq - xn;                                  // Equation (7)
 
     cv::Mat Jp = J.inv(cv::DECOMP_SVD);                     // Compute pseudo inverse of the Jacobian
-    cv::Mat dq = -lambda * Jp * e_q;                        // Equation (21)
+    cv::Mat dq = -lambda * Jp * e_q;                        // Equation (10)
 
     cv::Mat dctw(3,1,CV_64F), dcRw(3,3,CV_64F);
     exponential_map(dq, dctw, dcRw);

@@ -26,7 +26,7 @@ Then we introduce the function that does the homography estimation from coplanar
 Then we introduce the function that does the pose from homography estimation.
 \snippet pose-from-homography-dlt-visp.cpp Estimation function
 
-Based on equation (37) \f${\bf x}_0 = {^0}{\bf H}_w {\bf x}_w\f$ we first estimate the homography \f${^0}{\bf H}_w\f$.
+Based on equation (27) \f${\bf x}_0 = {^0}{\bf H}_w {\bf x}_w\f$ we first estimate the homography \f${^0}{\bf H}_w\f$.
 \snippet pose-from-homography-dlt-visp.cpp Homography estimation
 
 Then using the constraint that \f$||{\bf c}^0_1|| = 1\f$ we normalize the homography.
@@ -56,7 +56,7 @@ Then we create the data structures that will contain the 3D points coordinates \
 \snippet pose-from-homography-dlt-visp.cpp Create data structures
 
 For our simulation we then initialize the input data from a ground truth pose \e oTw_truth. 
-For each point \e wX[i] we compute the perspective projection \e xo[i] = (xo, yo, 1). According to equation (37) we also set \f${\bf x}_w = ({^w}X, {^w}Y, 1)\f$ in \e xw vector.
+For each point \e wX[i] we compute the perspective projection \e xo[i] = (xo, yo, 1). According to equation (27) we also set \f${\bf x}_w = ({^w}X, {^w}Y, 1)\f$ in \e xw vector.
 \snippet pose-from-homography-dlt-visp.cpp Simulation
 
 From here we have initialized \f${\bf x_0} = (x_0,y_0,1)^T\f$ and \f${\bf x}_w = ({^w}X, {^w}Y, 1)^T\f$. We are now ready to call the function that does the pose estimation.

@@ -21,7 +21,7 @@ vpMatrix homography_dlt(const std::vector< vpColVector > &x1, const std::vector<
 
   // Since the third line of matrix A is a linear combination of the first and second lines
   // (A is rank 2) we don't need to implement this third line
-  for(int i = 0; i < npoints; i++) {      // Update matrix A using eq. 33
+  for(int i = 0; i < npoints; i++) {      // Update matrix A using eq. 23
     A[2*i][3] = -x1[i][0];                // -xi_1
     A[2*i][4] = -x1[i][1];                // -yi_1
     A[2*i][5] = -x1[i][2];                // -1

@@ -21,7 +21,7 @@ cv::Mat homography_dlt(const std::vector< cv::Point2d > &x1, const std::vector< 
 
   // Since the third line of matrix A is a linear combination of the first and second lines
   // (A is rank 2) we don't need to implement this third line
-  for(int i = 0; i < npoints; i++) {      // Update matrix A using eq. 33
+  for(int i = 0; i < npoints; i++) {              // Update matrix A using eq. 23
     A.at<double>(2*i,3) = -x1[i].x;               // -xi_1
     A.at<double>(2*i,4) = -x1[i].y;               // -yi_1
     A.at<double>(2*i,5) = -1;                     // -1

@@ -26,7 +26,7 @@ From a vector of planar points \f${\bf x_1} = (x_1, y_1, 1)^T\f$ in image \f$I_1
 
 \f[\bf x_2 = {^2}H_1 x_1\f]
 
-The implementation of the Direct Linear Transform algorithm to estimate \f$\bf {^2}H_1\f$ is done next. First, for each point we update the values of matrix A using equation (33). Then we solve the system \f${\bf Ah}=0\f$ using a Singular Value Decomposition of \f$\bf A\f$. Finaly, we determine the smallest eigen value that allows to identify the eigen vector that corresponds to the solution \f$\bf h\f$.
+The implementation of the Direct Linear Transform algorithm to estimate \f$\bf {^2}H_1\f$ is done next. First, for each point we update the values of matrix A using equation (23). Then we solve the system \f${\bf Ah}=0\f$ using a Singular Value Decomposition of \f$\bf A\f$. Finaly, we determine the smallest eigen value that allows to identify the eigen vector that corresponds to the solution \f$\bf h\f$.
 
 \snippet homography-dlt-visp.cpp DLT
 

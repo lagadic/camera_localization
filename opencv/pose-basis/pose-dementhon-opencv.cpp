@@ -16,7 +16,7 @@ void pose_dementhon(const std::vector< cv::Point3d > &wX,
   int npoints = (int)wX.size();
   cv::Mat r1, r2, r3;
   cv::Mat A(npoints, 4, CV_64F);
-  for(int i = 0; i < npoints; i++) { // Equation (12)
+  for(int i = 0; i < npoints; i++) {
       A.at<double>(i,0) = wX[i].x;
       A.at<double>(i,1) = wX[i].y;
       A.at<double>(i,2) = wX[i].z;
@@ -34,11 +34,11 @@ void pose_dementhon(const std::vector< cv::Point3d > &wX,
   // POSIT loop
   for(unsigned int iter = 0; iter < 20; iter ++) {
     for(int i = 0; i < npoints; i++) {
-      Bx.at<double>(i,0) = x[i].x * (eps.at<double>(i,0) + 1.); // Equation (13)
-      By.at<double>(i,0) = x[i].y * (eps.at<double>(i,0) + 1.); // Equation (14)
+      Bx.at<double>(i,0) = x[i].x * (eps.at<double>(i,0) + 1.);
+      By.at<double>(i,0) = x[i].y * (eps.at<double>(i,0) + 1.);
     }
 
-    I = Ap * Bx; // Equation (15). Notice that the pseudo inverse
+    I = Ap * Bx; // Notice that the pseudo inverse
     J = Ap * By; // of matrix A is a constant that has been precompiled.
 
     for (int i = 0; i < 3; i++) {
@@ -54,7 +54,7 @@ void pose_dementhon(const std::vector< cv::Point3d > &wX,
     }
     normI = sqrt(normI);
     normJ = sqrt(normJ);
-    r1 = Istar / normI; // Equation (16)
+    r1 = Istar / normI;
     r2 = Jstar / normJ;
     r3 = r1.cross(r2);
 

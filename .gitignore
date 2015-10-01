@@ -1,2 +1,5 @@
-svn-commit.tmp*
 *~
+*/CMakeFiles
+CMakeCache.txt
+.DS_Store
+CMakeLists.txt.user*

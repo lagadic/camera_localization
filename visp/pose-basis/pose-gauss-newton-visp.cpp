@@ -36,7 +36,7 @@ vpHomogeneousMatrix pose_gauss_newton(
       xq[i*2]   = cX[0] / cX[2];                          // x(q) = cX/cZ
       xq[i*2+1] = cX[1] / cX[2];                          // y(q) = cY/cZ
 
-      // Update J using equation (22)
+      // Update J using equation (11)
       J[i*2][0] = -1/cX[2];                               // -1/cZ
       J[i*2][1] = 0;
       J[i*2][2] = x[i][0] / cX[2];                        // x/cZ
@@ -52,10 +52,10 @@ vpHomogeneousMatrix pose_gauss_newton(
       J[i*2+1][5] = -x[i][1];                             // -x
     }
 
-    vpColVector e_q = xq - xn;                            // Equation (18)
+    vpColVector e_q = xq - xn;                            // Equation (7)
 
     J.pseudoInverse(Jp);                                  // Compute pseudo inverse of the Jacobian
-    vpColVector dq = -lambda * Jp * e_q;                  // Equation (21)
+    vpColVector dq = -lambda * Jp * e_q;                  // Equation (10)
 
     cTw_ = vpExponentialMap::direct(dq).inverse() * cTw_; // Update the pose
 

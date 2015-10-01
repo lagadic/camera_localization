@@ -16,7 +16,7 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
   vpMatrix A(npoints, 4);
   for(int i = 0; i < npoints; i++) {
     for (int j = 0; j < 4; j++) {
-      A[i][j] = wX[i][j]; // Equation (12)
+      A[i][j] = wX[i][j];
     }
   }
   vpMatrix Ap = A.pseudoInverse();
@@ -33,11 +33,11 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
   // POSIT loop
   for(unsigned int iter = 0; iter < 20; iter ++) {
     for(int i = 0; i < npoints; i++) {
-      Bx[i] = x[i][0] * (eps[i] + 1.); // Equation (13)
-      By[i] = x[i][1] * (eps[i] + 1.); // Equation (14)
+      Bx[i] = x[i][0] * (eps[i] + 1.);
+      By[i] = x[i][1] * (eps[i] + 1.);
     }
 
-    I = Ap * Bx; // Equation (15). Notice that the pseudo inverse
+    I = Ap * Bx; // Notice that the pseudo inverse
     J = Ap * By; // of matrix A is a constant that has been precompiled.
 
     for (int i = 0; i < 3; i++) {
@@ -48,7 +48,7 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
     // Estimation of the rotation matrix
     double normI = sqrt( Istar.sumSquare() );
     double normJ = sqrt( Jstar.sumSquare() );
-    r1 = Istar / normI; // Equation (16)
+    r1 = Istar / normI;
     r2 = Jstar / normJ;
     r3 = vpColVector::crossProd(r1, r2);
 
