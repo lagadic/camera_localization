@@ -6,7 +6,7 @@
 #include <opencv2/calib3d/calib3d.hpp>
 //! [Include]
 
-void exponential_map(const cv::Mat &v, cv::Mat dt, cv::Mat dR)
+void exponential_map(const cv::Mat &v, cv::Mat &dt, cv::Mat &dR)
 {
   double vx = v.at<double>(0,0);
   double vy = v.at<double>(1,0);
@@ -43,13 +43,13 @@ void pose_gauss_newton(const std::vector< cv::Point3d > &wX,
 {
   //! [Gauss-Newton]
   int npoints = (int)wX.size();
-  cv::Mat J(2*npoints, 6, CV_64F);
+  cv::Mat J(2*npoints, 6, CV_64FC1);
   cv::Mat cX;
   double lambda = 0.25;
-  cv::Mat err, sd(2*npoints, 1, CV_64F), s(2*npoints, 1, CV_64F);
-  cv::Mat xq(npoints*2, 1, CV_64F);
+  cv::Mat err, sd(2*npoints, 1, CV_64FC1), s(2*npoints, 1, CV_64FC1);
+  cv::Mat xq(npoints*2, 1, CV_64FC1);
   // From input vector x = (x, y) we create a column vector xn = (x, y)^T to ease computation of e_q
-  cv::Mat xn(npoints*2, 1, CV_64F);
+  cv::Mat xn(npoints*2, 1, CV_64FC1);
   //vpHomogeneousMatrix cTw_ = cTw;
   double residual=0, residual_prev;
   cv::Mat Jp;
@@ -64,24 +64,32 @@ void pose_gauss_newton(const std::vector< cv::Point3d > &wX,
   do {
     for (int i = 0; i < npoints; i++) {
       cX = cRw * cv::Mat(wX[i]) + ctw;                      // Update cX, cY, cZ
+
+      double Xi = cX.at<double>(0,0);
+      double Yi = cX.at<double>(1,0);
+      double Zi = cX.at<double>(2,0);
+
+      double xi = Xi / Zi;
+      double yi = Yi / Zi;
+
       // Update x(q)
-      xq.at<double>(i*2,0)   = cX.at<double>(0,0) / cX.at<double>(2,0); // x(q) = cX/cZ
-      xq.at<double>(i*2+1,0) = cX.at<double>(1,0) / cX.at<double>(2,0); // y(q) = cY/cZ
+      xq.at<double>(i*2,0)   = xi;                          // x(q) = cX/cZ
+      xq.at<double>(i*2+1,0) = yi;                          // y(q) = cY/cZ
 
       // Update J using equation (11)
-      J.at<double>(i*2,0) = -1/cX.at<double>(2,0);          // -1/cZ
-      J.at<double>(i*2,1) = 0;
-      J.at<double>(i*2,2) = x[i].x / cX.at<double>(2,0);    // x/cZ
-      J.at<double>(i*2,3) = x[i].x * x[i].y;                // xy
-      J.at<double>(i*2,4) = -(1 + x[i].x * x[i].x);         // -(1+x^2)
-      J.at<double>(i*2,5) = x[i].y;                         // y
+      J.at<double>(i*2,0) = -1 / Zi;                        // -1/cZ
+      J.at<double>(i*2,1) = 0;                              // 0
+      J.at<double>(i*2,2) = xi / Zi;                        // x/cZ
+      J.at<double>(i*2,3) = xi * yi;                        // xy
+      J.at<double>(i*2,4) = -(1 + xi * xi);                 // -(1+x^2)
+      J.at<double>(i*2,5) = yi;                             // y
 
-      J.at<double>(i*2+1,0) = 0;
-      J.at<double>(i*2+1,1) = -1/cX.at<double>(2,0);        // -1/cZ
-      J.at<double>(i*2+1,2) = x[i].y / cX.at<double>(2,0);  // y/cZ
-      J.at<double>(i*2+1,3) = 1 + x[i].y * x[i].y;          // 1+y^2
-      J.at<double>(i*2+1,4) = -x[i].x * x[i].y;             // -xy
-      J.at<double>(i*2+1,5) = -x[i].y;                      // -x
+      J.at<double>(i*2+1,0) = 0;                            // 0
+      J.at<double>(i*2+1,1) = -1 / Zi;                      // -1/cZ
+      J.at<double>(i*2+1,2) = yi / Zi;                      // y/cZ
+      J.at<double>(i*2+1,3) = 1 + yi * yi;                  // 1+y^2
+      J.at<double>(i*2+1,4) = -xi * yi;                     // -xy
+      J.at<double>(i*2+1,5) = -xi;                          // -x
     }
 
     cv::Mat e_q = xq - xn;                                  // Equation (7)
@@ -89,7 +97,7 @@ void pose_gauss_newton(const std::vector< cv::Point3d > &wX,
     cv::Mat Jp = J.inv(cv::DECOMP_SVD);                     // Compute pseudo inverse of the Jacobian
     cv::Mat dq = -lambda * Jp * e_q;                        // Equation (10)
 
-    cv::Mat dctw(3,1,CV_64F), dcRw(3,3,CV_64F);
+    cv::Mat dctw(3,1,CV_64FC1), dcRw(3,3,CV_64FC1);
     exponential_map(dq, dctw, dcRw);
 
     cRw = dcRw.t() * cRw;                                   // Update the pose
@@ -115,7 +123,7 @@ int main()
   // Ground truth pose used to generate the data
   cv::Mat ctw_truth = (cv::Mat_<double>(3,1) << -0.1, 0.1, 0.5); // Translation vector
   cv::Mat crw_truth = (cv::Mat_<double>(3,1) << CV_PI/180*(5), CV_PI/180*(0), CV_PI/180*(45)); // Rotation vector
-  cv::Mat cRw_truth(3,3,cv::DataType<double>::type); // Rotation matrix
+  cv::Mat cRw_truth(3,3,CV_64FC1); // Rotation matrix
   cv::Rodrigues(crw_truth, cRw_truth);
 
   // Input data: 3D coordinates of at least 4 points
@@ -137,7 +145,7 @@ int main()
   // Initialize the pose to estimate near the solution
   cv::Mat ctw = (cv::Mat_<double>(3,1) << -0.05, 0.05, 0.45); // Initial translation
   cv::Mat crw = (cv::Mat_<double>(3,1) << CV_PI/180*(1), CV_PI/180*(0), CV_PI/180*(35)); // Initial rotation vector
-  cv::Mat cRw = cv::Mat::eye(3, 3, CV_64F); // Rotation matrix set to identity
+  cv::Mat cRw = cv::Mat::eye(3, 3, CV_64FC1); // Rotation matrix set to identity
   cv::Rodrigues(crw, cRw);
   //! [Set pose initial value]
 

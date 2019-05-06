@@ -32,24 +32,31 @@ vpHomogeneousMatrix pose_gauss_newton(
     for (int i = 0; i < npoints; i++) {
       vpColVector cX = cTw_ * wX[i];                      // Update cX, cY, cZ
 
+      double Xi = cX[0];
+      double Yi = cX[1];
+      double Zi = cX[2];
+
+      double xi = Xi / Zi;
+      double yi = Yi / Zi;
+
       // Update x(q)
-      xq[i*2]   = cX[0] / cX[2];                          // x(q) = cX/cZ
-      xq[i*2+1] = cX[1] / cX[2];                          // y(q) = cY/cZ
+      xq[i*2]   = xi;                                     // x(q) = cX/cZ
+      xq[i*2+1] = yi;                                     // y(q) = cY/cZ
 
       // Update J using equation (11)
-      J[i*2][0] = -1/cX[2];                               // -1/cZ
-      J[i*2][1] = 0;
-      J[i*2][2] = x[i][0] / cX[2];                        // x/cZ
-      J[i*2][3] = x[i][0] * x[i][1];                      // xy
-      J[i*2][4] = -(1 + x[i][0] * x[i][0]);               // -(1+x^2)
-      J[i*2][5] = x[i][1];                                // y
+      J[i*2][0] = -1 / Zi;                                // -1/cZ
+      J[i*2][1] = 0;                                      // 0
+      J[i*2][2] = xi / Zi;                                // x/cZ
+      J[i*2][3] = xi * yi;                                // xy
+      J[i*2][4] = -(1 + xi * xi);                         // -(1+x^2)
+      J[i*2][5] = yi;                                     // y
 
-      J[i*2+1][0] = 0;
-      J[i*2+1][1] = -1/cX[2];                             // -1/cZ
-      J[i*2+1][2] = x[i][1] / cX[2];                      // y/cZ
-      J[i*2+1][3] = 1 + x[i][1] * x[i][1];                // 1+y^2
-      J[i*2+1][4] = -x[i][0] * x[i][1];                   // -xy
-      J[i*2+1][5] = -x[i][1];                             // -x
+      J[i*2+1][0] = 0;                                    // 0
+      J[i*2+1][1] = -1 / Zi;                              // -1/cZ
+      J[i*2+1][2] = yi / Zi;                              // y/cZ
+      J[i*2+1][3] = 1 + yi * yi;                          // 1+y^2
+      J[i*2+1][4] = -xi * yi;                             // -xy
+      J[i*2+1][5] = -xi;                                  // -x
     }
 
     vpColVector e_q = xq - xn;                            // Equation (7)

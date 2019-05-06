@@ -123,9 +123,9 @@ int main()
   //! [Call function]
 
   std::cout << "ctw (ground truth):\n" << ctw_truth << std::endl;
-  std::cout << "ctw (computed with DLT):\n" << ctw << std::endl;
+  std::cout << "ctw (computed with Dementhon):\n" << ctw << std::endl;
   std::cout << "cRw (ground truth):\n" << cRw_truth << std::endl;
-  std::cout << "cRw (computed with DLT):\n" << cRw << std::endl;
+  std::cout << "cRw (computed with Dementhon):\n" << cRw << std::endl;
 
   return 0;
 }
