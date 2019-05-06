@@ -12,7 +12,7 @@ Augmented Reality (AR) has now progressed to the point where real-time applicati
 
 \code
 E. Marchand, H. Uchiyama and F. Spindler. Pose estimation for augmented reality:
-a hands-on survey. submitted
+a hands-on survey. IEEE Trans. on Visualization and Computer Graphics, 22(12):2633-2651, December 2016.
 \endcode
 
 a brief but almost self contented introduction to the most important approaches dedicated to camera localization along with a survey of the extension that have been proposed in the recent years. We also try to link these methodological concepts to the main libraries and SDK available on the market. 
