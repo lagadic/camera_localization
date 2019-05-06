@@ -97,8 +97,7 @@ WARN_LOGFILE           = warning.log
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @PROJECT_SOURCE_DIR@ \
-                         @PROJECT_SOURCE_DIR@/visp/pose-basis \
+INPUT                  = @PROJECT_SOURCE_DIR@/visp/pose-basis \
                          @PROJECT_SOURCE_DIR@/visp/homography-basis \
                          @PROJECT_SOURCE_DIR@/visp/pose-mbt \
                          @PROJECT_SOURCE_DIR@/visp/template-matching \
