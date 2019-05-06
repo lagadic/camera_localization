@@ -69,12 +69,12 @@ void pose_gauss_newton(const std::vector< cv::Point3d > &wX,
       double Yi = cX.at<double>(1,0);
       double Zi = cX.at<double>(2,0);
 
-      // Update x(q)
-      xq.at<double>(i*2,0)   = Xi / Zi;                     // x(q) = cX/cZ
-      xq.at<double>(i*2+1,0) = Yi / Zi;                     // y(q) = cY/cZ
-
       double xi = Xi / Zi;
       double yi = Yi / Zi;
+
+      // Update x(q)
+      xq.at<double>(i*2,0)   = xi;                          // x(q) = cX/cZ
+      xq.at<double>(i*2+1,0) = yi;                          // y(q) = cY/cZ
 
       // Update J using equation (11)
       J.at<double>(i*2,0) = -1 / Zi;                        // -1/cZ

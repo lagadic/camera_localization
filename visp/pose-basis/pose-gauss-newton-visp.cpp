@@ -36,12 +36,12 @@ vpHomogeneousMatrix pose_gauss_newton(
       double Yi = cX[1];
       double Zi = cX[2];
 
-      // Update x(q)
-      xq[i*2]   = Xi / Zi;                                // x(q) = cX/cZ
-      xq[i*2+1] = Yi / Zi;                                // y(q) = cY/cZ
-
       double xi = Xi / Zi;
       double yi = Yi / Zi;
+
+      // Update x(q)
+      xq[i*2]   = xi;                                     // x(q) = cX/cZ
+      xq[i*2+1] = yi;                                     // y(q) = cY/cZ
 
       // Update J using equation (11)
       J[i*2][0] = -1 / Zi;                                // -1/cZ
