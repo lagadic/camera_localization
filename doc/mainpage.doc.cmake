@@ -8,8 +8,7 @@
 
 Augmented Reality (AR) has now progressed to the point where real-time applications are being considered and needed. At the same time it is important that synthetic elements are rendered and aligned in the scene in an accurate and visually acceptable way. In order to address these issues, real-time, robust and efficient tracking algorithms have to be considered. The tracking of objects in the scene amounts to calculating the location (or pose) between the camera and the scene.
 
-
- In the paper:
+ In the paper <a href="http://rainbow-doc.irisa.fr/pdf/2016_ieeetvcg_marchand.pdf">[pdf]</a>:
 
 \code
 E. Marchand, H. Uchiyama and F. Spindler. Pose estimation for augmented reality:
@@ -17,8 +16,6 @@ a hands-on survey. submitted
 \endcode
 
 a brief but almost self contented introduction to the most important approaches dedicated to camera localization along with a survey of the extension that have been proposed in the recent years. We also try to link these methodological concepts to the main libraries and SDK available on the market. 
-
-
 
 The aim of this paper is then to provide researchers and practitioners with an almost  comprehensive and consolidate 
 introduction to effective tools to facilitate  research in augmented reality. It is also dedicated to academics involved in teaching augmented reality at the undergraduate and graduate level. 
@@ -50,12 +47,12 @@ Once ViSP is installed, download the lastest source code release from github <ht
 
 Unzip the archive:
 \code
-$ unzip camera_localization-2.0.0.zip
+$ unzip camera_localization-2.0.1.zip
 \endcode
 
 or extract the code from tarball:
 \code
-$ tar xvzf camera_localization-2.0.0.tar.gz
+$ tar xvzf camera_localization-2.0.1.tar.gz
 \endcode
 
 
