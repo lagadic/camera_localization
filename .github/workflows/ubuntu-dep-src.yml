@@ -34,7 +34,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update && sudo apt-get install -y libx11-dev libdc1394-22-dev libv4l-dev gfortran liblapack-dev libopenblas-dev libeigen3-dev libopencv-dev
-        sudo apt-get update && sudo apt-get install -y doxygen graphviz texlive-latex-base
+        sudo apt-get update && sudo apt-get install -y doxygen graphviz texlive-latex-base texlive-latex-extra
 
     - name: Build ViSP from source
       run: |
