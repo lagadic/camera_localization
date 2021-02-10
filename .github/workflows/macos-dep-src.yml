@@ -1,0 +1,63 @@
+name: MacOS-dep-sec
+
+# https://www.jeffgeerling.com/blog/2020/running-github-actions-workflow-on-schedule-and-other-events
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 2 * * SUN'
+
+jobs:
+  build-macos-dep-sec:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-10.15, macos-11.0]
+
+    steps:
+    # https://github.com/marketplace/actions/cancel-workflow-action
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.5.0
+      with:
+        access_token: ${{ github.token }}
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Print system information
+      run: sysctl -a | grep machdep.cpu
+
+    - name: Print OS information
+      run: system_profiler SPSoftwareDataType
+
+    - name: Install dependencies
+      run: |
+        brew update && brew upgrade
+        brew install libpng libjpeg libdc1394 lapack openblas eigen opencv doxygen
+
+    # Openblas location is exported explicitly because openblas is keg-only,
+    # which means it was not symlinked into /usr/local/.
+    - name: Clone and configure ViSP
+      run: |
+        git clone --depth 1 https://github.com/lagadic/visp.git ${HOME}/visp
+        cd ${HOME}/visp
+        export LDFLAGS="-L/usr/local/opt/openblas/lib"
+        export CPPFLAGS="-I/usr/local/opt/openblas/include"
+        mkdir build && cd build
+        cmake .. -DCMAKE_FIND_FRAMEWORK=LAST -DBUILD_DEMOS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_TUTORIALS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(pwd)/install
+        cat ViSP-third-party.txt
+
+    - name: Build and install ViSP
+      run: |
+        cd ${HOME}/visp/build
+        make -j2 install
+        echo "VISP_DIR=$(pwd)/install" >> $GITHUB_ENV
+        echo $VISP_DIR
+
+    - name: Configure CMake and build camera_localization
+      run: |
+        mkdir build && cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+        make -j2
+        make doc
