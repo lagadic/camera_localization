@@ -1,5 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
 project(camera-localization)
-cmake_minimum_required(VERSION 3.0)
 
 option(WITH_OPENCV "Implementation using OpenCV structures" ON)
 option(WITH_VISP "Implementation using OpenCV structures" ON)
