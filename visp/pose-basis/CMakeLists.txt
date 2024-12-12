@@ -1,5 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
 project(pose-basis-visp)
-cmake_minimum_required(VERSION 3.0)
 
 find_package(VISP REQUIRED)
 

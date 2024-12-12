@@ -1,6 +1,6 @@
-project(template-matching-visp)
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
+project(template-matching-visp)
 
 find_package(VISP REQUIRED)
 

@@ -1,6 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
 project(pose-mbt-visp)
-
-cmake_minimum_required(VERSION 3.0)
 
 find_package(VISP REQUIRED)
 

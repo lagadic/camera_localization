@@ -1,5 +1,5 @@
-project(homography-basis-visp)
-cmake_minimum_required(VERSION 3.0)
+project(homography-basis-opencv)
+cmake_minimum_required(VERSION 3.10)
 
 find_package(OpenCV)
 
