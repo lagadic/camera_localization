@@ -10,7 +10,9 @@
 #if defined(HAVE_OPENCV_CALIB)
 #include <opencv2/calib.hpp>
 #endif
-
+#if defined(HAVE_OPENCV_3D)
+#include <opencv2/3d.hpp>
+#endif
 //! [Include]
 
 void exponential_map(const cv::Mat& v, cv::Mat& dt, cv::Mat& dR) {
@@ -39,14 +41,14 @@ void exponential_map(const cv::Mat& v, cv::Mat& dt, cv::Mat& dR) {
   dt.at<double>(2, 0) = vx * (vtux * vtuz * msinc - vtuy * mcosc)
     + vy * (vtuy * vtuz * msinc + vtux * mcosc)
     + vz * (sinc + vtuz * vtuz * msinc);
-  }
+}
 
 //! [Estimation function]
 void pose_gauss_newton(const std::vector< cv::Point3d >& wX,
                        const std::vector< cv::Point2d >& x,
                        cv::Mat& ctw, cv::Mat& cRw)
-  //! [Estimation function]
-  {
+//! [Estimation function]
+{
   //! [Gauss-Newton]
   int npoints = (int)wX.size();
   cv::Mat J(2 * npoints, 6, CV_64FC1);
@@ -64,7 +66,7 @@ void pose_gauss_newton(const std::vector< cv::Point3d >& wX,
   for (int i = 0; i < x.size(); i++) {
     xn.at<double>(i * 2, 0) = x[i].x; // x
     xn.at<double>(i * 2 + 1, 0) = x[i].y; // y
-    }
+  }
 
   // Iterative Gauss-Newton minimization loop
   do {
@@ -96,7 +98,7 @@ void pose_gauss_newton(const std::vector< cv::Point3d >& wX,
       J.at<double>(i * 2 + 1, 3) = 1 + yi * yi;                  // 1+y^2
       J.at<double>(i * 2 + 1, 4) = -xi * yi;                     // -xy
       J.at<double>(i * 2 + 1, 5) = -xi;                          // -x
-      }
+    }
 
     cv::Mat e_q = xq - xn;                                  // Equation (7)
 
@@ -112,14 +114,14 @@ void pose_gauss_newton(const std::vector< cv::Point3d >& wX,
     residual_prev = residual;                               // Memorize previous residual
     residual = e_q.dot(e_q);                                // Compute the actual residual
 
-    } while (fabs(residual - residual_prev) > 0);
+  } while (fabs(residual - residual_prev) > 0);
   //! [Gauss-Newton]
-  }
+}
 
 //! [Main function]
 int main()
 //! [Main function]
-  {
+{
   //! [Create data structures]
   std::vector< cv::Point3d > wX;
   std::vector< cv::Point2d >  x;
@@ -144,7 +146,7 @@ int main()
     cv::Mat cX = cRw_truth * cv::Mat(wX[i]) + ctw_truth; // Update cX, cY, cZ
     x.push_back(cv::Point2d(cX.at<double>(0, 0) / cX.at<double>(2, 0),
                             cX.at<double>(1, 0) / cX.at<double>(2, 0))); // x = (cX/cZ, cY/cZ)
-    }
+  }
   //! [Simulation]
 
   //! [Set pose initial value]
@@ -165,4 +167,4 @@ int main()
   std::cout << "cRw (from non linear method):\n" << cRw << std::endl;
 
   return 0;
-  }
+}

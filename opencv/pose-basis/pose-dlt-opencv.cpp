@@ -10,12 +10,15 @@
 #if defined(HAVE_OPENCV_CALIB)
 #include <opencv2/calib.hpp>
 #endif
+#if defined(HAVE_OPENCV_3D)
+#include <opencv2/3d.hpp>
+#endif
 //! [Include]
 
 //! [Estimation function]
 void pose_dlt(const std::vector< cv::Point3d >& wX, const std::vector< cv::Point2d >& x, cv::Mat& ctw, cv::Mat& cRw)
 //! [Estimation function]
-  {
+{
   //! [DLT]
   int npoints = (int)wX.size();
   cv::Mat A(2 * npoints, 12, CV_64F, cv::Scalar(0));
@@ -39,7 +42,7 @@ void pose_dlt(const std::vector< cv::Point3d >& wX, const std::vector< cv::Point
     A.at<double>(2 * i + 1, 9) = -x[i].y * wX[i].y;
     A.at<double>(2 * i + 1, 10) = -x[i].y * wX[i].z;
     A.at<double>(2 * i + 1, 11) = -x[i].y;
-    }
+  }
 
   cv::Mat w, u, vt;
   cv::SVD::compute(A, w, u, vt);
@@ -50,8 +53,8 @@ void pose_dlt(const std::vector< cv::Point3d >& wX, const std::vector< cv::Point
     if ((w.at<double>(i, 0) < smallestSv)) {
       smallestSv = w.at<double>(i, 0);
       indexSmallestSv = i;
-      }
     }
+  }
   cv::Mat h = vt.row(indexSmallestSv);
 
   if (h.at<double>(0, 11) < 0) // tz < 0
@@ -68,17 +71,18 @@ void pose_dlt(const std::vector< cv::Point3d >& wX, const std::vector< cv::Point
   //! [Update homogeneous matrix]
   for (int i = 0; i < 3; i++) {
     ctw.at<double>(i, 0) = h.at<double>(0, 4 * i + 3); // Translation
-    for (int j = 0; j < 3; j++)
+    for (int j = 0; j < 3; j++) {
       cRw.at<double>(i, j) = h.at<double>(0, 4 * i + j); // Rotation
     }
-  //! [Update homogeneous matrix]
   }
+  //! [Update homogeneous matrix]
+}
 
 
 //! [Main function]
 int main()
 //! [Main function]
-  {
+{
   //! [Create data structures]
   std::vector< cv::Point3d > wX;
   std::vector< cv::Point2d >  x;
@@ -105,7 +109,7 @@ int main()
     cv::Mat cX = cRw_truth * cv::Mat(wX[i]) + ctw_truth; // Update cX, cY, cZ
     x.push_back(cv::Point2d(cX.at<double>(0, 0) / cX.at<double>(2, 0),
                             cX.at<double>(1, 0) / cX.at<double>(2, 0))); // x = (cX/cZ, cY/cZ)
-    }
+  }
   //! [Simulation]
 
   //! [Call function]
@@ -121,4 +125,4 @@ int main()
   std::cout << "cRw (computed with DLT):\n" << cRw << std::endl;
 
   return 0;
-  }
+}

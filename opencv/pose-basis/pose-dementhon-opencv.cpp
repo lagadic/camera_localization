@@ -10,14 +10,17 @@
 #if defined(HAVE_OPENCV_CALIB)
 #include <opencv2/calib.hpp>
 #endif
+#if defined(HAVE_OPENCV_3D)
+#include <opencv2/3d.hpp>
+#endif
 //! [Include]
 
 //! [Estimation function]
 void pose_dementhon(const std::vector< cv::Point3d >& wX,
                     const std::vector< cv::Point2d >& x,
                     cv::Mat& ctw, cv::Mat& cRw)
-  //! [Estimation function]
-  {
+//! [Estimation function]
+{
   //! [POSIT]
   int npoints = (int)wX.size();
   cv::Mat r1, r2, r3;
@@ -27,7 +30,7 @@ void pose_dementhon(const std::vector< cv::Point3d >& wX,
     A.at<double>(i, 1) = wX[i].y;
     A.at<double>(i, 2) = wX[i].z;
     A.at<double>(i, 3) = 1;
-    }
+  }
   cv::Mat Ap = A.inv(cv::DECOMP_SVD);
 
   cv::Mat eps(npoints, 1, CV_64F, cv::Scalar(0)); // Initialize epsilon_i = 0
@@ -42,7 +45,7 @@ void pose_dementhon(const std::vector< cv::Point3d >& wX,
     for (int i = 0; i < npoints; i++) {
       Bx.at<double>(i, 0) = x[i].x * (eps.at<double>(i, 0) + 1.);
       By.at<double>(i, 0) = x[i].y * (eps.at<double>(i, 0) + 1.);
-      }
+    }
 
     I = Ap * Bx; // Notice that the pseudo inverse
     J = Ap * By; // of matrix A is a constant that has been precompiled.
@@ -50,14 +53,14 @@ void pose_dementhon(const std::vector< cv::Point3d >& wX,
     for (int i = 0; i < 3; i++) {
       Istar.at<double>(i, 0) = I.at<double>(i, 0);
       Jstar.at<double>(i, 0) = J.at<double>(i, 0);
-      }
+    }
 
     // Estimation of the rotation matrix
     double normI = 0, normJ = 0;
     for (int i = 0; i < 3; i++) {
       normI += Istar.at<double>(i, 0) * Istar.at<double>(i, 0);
       normJ += Jstar.at<double>(i, 0) * Jstar.at<double>(i, 0);
-      }
+    }
     normI = sqrt(normI);
     normJ = sqrt(normJ);
     r1 = Istar / normI;
@@ -74,8 +77,8 @@ void pose_dementhon(const std::vector< cv::Point3d >& wX,
       eps.at<double>(i, 0) = (r3.at<double>(0, 0) * wX[i].x
                               + r3.at<double>(1, 0) * wX[i].y
                               + r3.at<double>(2, 0) * wX[i].z) / tz;
-      }
     }
+  }
   //! [POSIT]
 
   //! [Update homogeneous matrix]
@@ -86,14 +89,14 @@ void pose_dementhon(const std::vector< cv::Point3d >& wX,
     cRw.at<double>(0, i) = r1.at<double>(i, 0);
     cRw.at<double>(1, i) = r2.at<double>(i, 0);
     cRw.at<double>(2, i) = r3.at<double>(i, 0);
-    }
-  //! [Update homogeneous matrix]
   }
+  //! [Update homogeneous matrix]
+}
 
 //! [Main function]
 int main()
 //! [Main function]
-  {
+{
   //! [Create data structures]
   std::vector< cv::Point3d > wX;
   std::vector< cv::Point2d >  x;
@@ -118,7 +121,7 @@ int main()
     cv::Mat cX = cRw_truth * cv::Mat(wX[i]) + ctw_truth; // Update cX, cY, cZ
     x.push_back(cv::Point2d(cX.at<double>(0, 0) / cX.at<double>(2, 0),
                             cX.at<double>(1, 0) / cX.at<double>(2, 0))); // x = (cX/cZ, cY/cZ)
-    }
+  }
   //! [Simulation]
 
   //! [Call function]
@@ -134,4 +137,4 @@ int main()
   std::cout << "cRw (computed with Dementhon):\n" << cRw << std::endl;
 
   return 0;
-  }
+}
