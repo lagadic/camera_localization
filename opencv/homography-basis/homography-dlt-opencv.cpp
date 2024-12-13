@@ -9,12 +9,15 @@
 #if defined(HAVE_OPENCV_CALIB)
 #include <opencv2/calib.hpp>
 #endif
+#if defined(HAVE_OPENCV_3D)
+#include <opencv2/3d.hpp>
+#endif
 //! [Include]
 
 //! [Estimation function]
 cv::Mat homography_dlt(const std::vector< cv::Point2d >& x1, const std::vector< cv::Point2d >& x2)
 //! [Estimation function]
-  {
+{
   //! [DLT]
   int npoints = (int)x1.size();
   cv::Mat A(2 * npoints, 9, CV_64F, cv::Scalar(0));
@@ -76,12 +79,12 @@ cv::Mat homography_dlt(const std::vector< cv::Point2d >& x1, const std::vector< 
   //! [Update homography matrix]
 
   return _2H1;
-  }
+}
 
 //! [Main function]
 int main()
 //! [Main function]
-  {
+{
   //! [Create data structures]
   std::vector< cv::Point2d > x1; // Points projected in the image plane linked to camera 1
   std::vector< cv::Point2d > x2; // Points projected in the image plane linked to camera 2
@@ -121,7 +124,7 @@ int main()
     // Compute 2D points coordinates in image plane from perspective projection
     x2.push_back(cv::Point2d(c2X.at<double>(0, 0) / c2X.at<double>(2, 0),     // x2 = c2X/c2Z
                              c2X.at<double>(1, 0) / c2X.at<double>(2, 0))); // y2 = c2Y/c2Z
-    }
+  }
   //! [Simulation]
 
   //! [Call function]
@@ -131,4 +134,4 @@ int main()
   std::cout << "2H1 (computed with DLT):\n" << _2H1 << std::endl;
 
   return 0;
-  }
+}

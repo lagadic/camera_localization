@@ -9,12 +9,15 @@
 #if defined(HAVE_OPENCV_CALIB)
 #include <opencv2/calib.hpp>
 #endif
+#if defined(HAVE_OPENCV_3D)
+#include <opencv2/3d.hpp>
+#endif
 //! [Include]
 
 //! [Homography DLT function]
 cv::Mat homography_dlt(const std::vector< cv::Point2d >& x1, const std::vector< cv::Point2d >& x2)
 //! [Homography DLT function]
-  {
+{
   //! [DLT]
   int npoints = (int)x1.size();
   cv::Mat A(2 * npoints, 9, CV_64F, cv::Scalar(0));
@@ -41,14 +44,14 @@ cv::Mat homography_dlt(const std::vector< cv::Point2d >& x1, const std::vector< 
     A.at<double>(2 * i + 1, 6) = -x2[i].x * x1[i].x;   // -xi_2 * xi_1
     A.at<double>(2 * i + 1, 7) = -x2[i].x * x1[i].y;   // -xi_2 * yi_1
     A.at<double>(2 * i + 1, 8) = -x2[i].x;             // -xi_2
-    }
+  }
 
   // Add an extra line with zero.
   if (npoints == 4) {
     for (int i = 0; i < 9; i++) {
       A.at<double>(2 * npoints, i) = 0;
-      }
     }
+  }
 
   cv::Mat w, u, vt;
   cv::SVD::compute(A, w, u, vt);
@@ -59,8 +62,8 @@ cv::Mat homography_dlt(const std::vector< cv::Point2d >& x1, const std::vector< 
     if ((w.at<double>(i, 0) < smallestSv)) {
       smallestSv = w.at<double>(i, 0);
       indexSmallestSv = i;
-      }
     }
+  }
 
   cv::Mat h = vt.row(indexSmallestSv);
 
@@ -70,20 +73,22 @@ cv::Mat homography_dlt(const std::vector< cv::Point2d >& x1, const std::vector< 
 
   //! [Update homography matrix]
   cv::Mat _2H1(3, 3, CV_64F);
-  for (int i = 0; i < 3; i++)
-    for (int j = 0; j < 3; j++)
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
       _2H1.at<double>(i, j) = h.at<double>(0, 3 * i + j);
+    }
+  }
   //! [Update homography matrix]
 
   return _2H1;
-  }
+}
 
 //! [Estimation function]
 void pose_from_homography_dlt(const std::vector< cv::Point2d >& xw,
                               const std::vector< cv::Point2d >& xo,
                               cv::Mat& otw, cv::Mat& oRw)
-  //! [Estimation function]
-  {
+//! [Estimation function]
+{
   //! [Homography estimation]
   cv::Mat oHw = homography_dlt(xw, xo);
   //! [Homography estimation]
@@ -111,14 +116,14 @@ void pose_from_homography_dlt(const std::vector< cv::Point2d >& xw,
     oRw.at<double>(i, 0) = c1.at<double>(i, 0);
     oRw.at<double>(i, 1) = c2.at<double>(i, 0);
     oRw.at<double>(i, 2) = c3.at<double>(i, 0);
-    }
-  //! [Update pose]
   }
+  //! [Update pose]
+}
 
 //! [Main function]
 int main()
 //! [Main function]
-  {
+{
   //! [Create data structures]
   int npoints = 4;
 
@@ -149,7 +154,7 @@ int main()
                              oX.at<double>(1, 0) / oX.at<double>(2, 0))); // xo = (oX/oZ, oY/oZ)
 
     xw.push_back(cv::Point2d(wX[i].x, wX[i].y)); // xw = (wX, wY)
-    }
+  }
   //! [Simulation]
 
   //! [Call function]
@@ -165,4 +170,4 @@ int main()
   std::cout << "oRw (computed with homography DLT):\n" << oRw << std::endl;
 
   return 0;
-  }
+}
