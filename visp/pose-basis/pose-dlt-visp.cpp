@@ -6,6 +6,10 @@
 #include <visp/vpMatrix.h>
 //! [Include]
 
+#ifdef ENABLE_VISP_NAMESPACE
+using namespace VISP_NAMESPACE_NAME;
+#endif
+
 //! [Estimation function]
 vpHomogeneousMatrix pose_dlt(const std::vector< vpColVector > &wX, const std::vector< vpColVector > &x)
 //! [Estimation function]
@@ -13,7 +17,7 @@ vpHomogeneousMatrix pose_dlt(const std::vector< vpColVector > &wX, const std::ve
   //! [DLT]
   int npoints = (int)wX.size();
   vpMatrix A(2*npoints, 12, 0.);
-  for(int i = 0; i < npoints; i++) { // Update matrix A using eq. 5
+  for (int i = 0; i < npoints; i++) { // Update matrix A using eq. 5
     A[2*i][0] = wX[i][0];
     A[2*i][1] = wX[i][1];
     A[2*i][2] = wX[i][2];
@@ -24,13 +28,13 @@ vpHomogeneousMatrix pose_dlt(const std::vector< vpColVector > &wX, const std::ve
     A[2*i+1][6] = wX[i][2];
     A[2*i+1][7] = 1;
 
-    A[2*i][8]  = -x[i][0] * wX[i][0];
-    A[2*i][9]  = -x[i][0] * wX[i][1];
+    A[2*i][8] = -x[i][0] * wX[i][0];
+    A[2*i][9] = -x[i][0] * wX[i][1];
     A[2*i][10] = -x[i][0] * wX[i][2];
     A[2*i][11] = -x[i][0];
 
-    A[2*i+1][8]  = -x[i][1] * wX[i][0];
-    A[2*i+1][9]  = -x[i][1] * wX[i][1];
+    A[2*i+1][8] = -x[i][1] * wX[i][0];
+    A[2*i+1][9] = -x[i][1] * wX[i][1];
     A[2*i+1][10] = -x[i][1] * wX[i][2];
     A[2*i+1][11] = -x[i][1];
   }
@@ -41,9 +45,9 @@ vpHomogeneousMatrix pose_dlt(const std::vector< vpColVector > &wX, const std::ve
   A.svd(D, V);
 
   double smallestSv = D[0];
-  unsigned int indexSmallestSv = 0 ;
+  unsigned int indexSmallestSv = 0;
   for (unsigned int i = 1; i < D.size(); i++) {
-    if ((D[i] < smallestSv) ) {
+    if ((D[i] < smallestSv)) {
       smallestSv = D[i];
       indexSmallestSv = i;
     }
@@ -56,7 +60,7 @@ vpHomogeneousMatrix pose_dlt(const std::vector< vpColVector > &wX, const std::ve
 #endif
 
   if (h[11] < 0) // tz < 0
-    h *=-1;
+    h *= -1;
 
   // Normalization to ensure that ||r3|| = 1
   double norm = sqrt(vpMath::sqr(h[8]) + vpMath::sqr(h[9]) + vpMath::sqr(h[10]));
@@ -66,8 +70,8 @@ vpHomogeneousMatrix pose_dlt(const std::vector< vpColVector > &wX, const std::ve
 
   //! [Update homogeneous matrix]
   vpHomogeneousMatrix cTw;
-  for (int i = 0 ; i < 3 ; i++)
-    for (int j = 0 ; j < 4 ; j++)
+  for (int i = 0; i < 3; i++)
+    for (int j = 0; j < 4; j++)
       cTw[i][j] = h[4*i+j];
   //! [Update homogeneous matrix]
 
@@ -96,15 +100,15 @@ int main()
 
   // Input data: 3D coordinates of at least 6 non coplanar points
   double L = 0.2;
-  wX[0][0] =   -L; wX[0][1] = -L; wX[0][2] = 0;   wX[0][3] = 1; // wX_0 ( -L, -L, 0,   1)^T
-  wX[1][0] =  2*L; wX[1][1] = -L; wX[1][2] = 0.2; wX[1][3] = 1; // wX_1 (-2L, -L, 0.2, 1)^T
-  wX[2][0] =    L; wX[2][1] =  L; wX[2][2] = 0.2; wX[2][3] = 1; // wX_2 (  L,  L, 0.2, 1)^T
-  wX[3][0] =   -L; wX[3][1] =  L; wX[3][2] = 0;   wX[3][3] = 1; // wX_3 ( -L,  L, 0,   1)^T
-  wX[4][0] = -2*L; wX[4][1] =  L; wX[4][2] = 0;   wX[4][3] = 1; // wX_4 (-2L,  L, 0,   1)^T
-  wX[5][0] =    0; wX[5][1] =  0; wX[5][2] = 0.5; wX[5][3] = 1; // wX_5 (  0,  0, 0.5, 1)^T
+  wX[0][0] = -L; wX[0][1] = -L; wX[0][2] = 0;   wX[0][3] = 1; // wX_0 ( -L, -L, 0,   1)^T
+  wX[1][0] = 2*L; wX[1][1] = -L; wX[1][2] = 0.2; wX[1][3] = 1; // wX_1 (-2L, -L, 0.2, 1)^T
+  wX[2][0] = L; wX[2][1] = L; wX[2][2] = 0.2; wX[2][3] = 1; // wX_2 (  L,  L, 0.2, 1)^T
+  wX[3][0] = -L; wX[3][1] = L; wX[3][2] = 0;   wX[3][3] = 1; // wX_3 ( -L,  L, 0,   1)^T
+  wX[4][0] = -2*L; wX[4][1] = L; wX[4][2] = 0;   wX[4][3] = 1; // wX_4 (-2L,  L, 0,   1)^T
+  wX[5][0] = 0; wX[5][1] = 0; wX[5][2] = 0.5; wX[5][3] = 1; // wX_5 (  0,  0, 0.5, 1)^T
 
   // Input data: 2D coordinates of the points on the image plane
-  for(int i = 0; i < npoints; i++) {
+  for (int i = 0; i < npoints; i++) {
     vpColVector cX = cTw_truth * wX[i];     // Update cX, cY, cZ
     x[i][0] = cX[0] / cX[2]; // x = cX/cZ
     x[i][1] = cX[1] / cX[2]; // y = cY/cZ

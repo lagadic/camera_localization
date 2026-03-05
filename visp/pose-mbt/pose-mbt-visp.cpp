@@ -9,13 +9,17 @@
 //! [Include]
 #include <visp/vpVideoReader.h>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
+#ifdef ENABLE_VISP_NAMESPACE
+  using namespace VISP_NAMESPACE_NAME;
+#endif
+
 #if defined(VISP_HAVE_OPENCV) && (VISP_HAVE_OPENCV_VERSION >= 0x020100) || defined(VISP_HAVE_FFMPEG)
   try {
     std::string videoname = "teabox.mpg";
 
-    for (int i=0; i<argc; i++) {
+    for (int i = 0; i<argc; i++) {
       if (std::string(argv[i]) == "--name")
         videoname = std::string(argv[i+1]);
       else if (std::string(argv[i]) == "--help") {
@@ -26,16 +30,16 @@ int main(int argc, char** argv)
     std::string parentname = vpIoTools::getParent(videoname);
     std::string objectname = vpIoTools::getNameWE(videoname);
 
-    if(! parentname.empty())
-       objectname = parentname + "/" + objectname;
+    if (!parentname.empty())
+      objectname = parentname + "/" + objectname;
 
     std::cout << "Video name: " << videoname << std::endl;
     std::cout << "Tracker requested config files: " << objectname
-              << ".[init,"
+      << ".[init,"
 #ifdef VISP_HAVE_XML2
-              << "xml,"
+      << "xml,"
 #endif
-              << "cao or wrl]" << std::endl;
+      << "cao or wrl]" << std::endl;
     std::cout << "Tracker optional config files: " << objectname << ".[ppm]" << std::endl;
 
     //! [Image]
@@ -51,11 +55,11 @@ int main(int argc, char** argv)
     g.open(I);
 
 #if defined(VISP_HAVE_X11)
-    vpDisplayX display(I,100,100,"Model-based edge tracker");;
+    vpDisplayX display(I, 100, 100, "Model-based edge tracker");;
 #elif defined(VISP_HAVE_GDI)
-    vpDisplayGDI display(I,100,100,"Model-based edge tracker");;
+    vpDisplayGDI display(I, 100, 100, "Model-based edge tracker");;
 #elif defined(VISP_HAVE_OPENCV)
-    vpDisplayOpenCV display(I,100,100,"Model-based edge tracker");;
+    vpDisplayOpenCV display(I, 100, 100, "Model-based edge tracker");;
 #else
     std::cout << "No image viewer is available..." << std::endl;
 #endif
@@ -66,13 +70,13 @@ int main(int argc, char** argv)
     bool usexml = false;
 #ifdef VISP_HAVE_XML2
     //! [Load xml]
-    if(vpIoTools::checkFilename(objectname + ".xml")) {
+    if (vpIoTools::checkFilename(objectname + ".xml")) {
       tracker.loadConfigFile(objectname + ".xml");
       usexml = true;
     }
     //! [Load xml]
 #endif
-    if (! usexml) {
+    if (!usexml) {
       //! [Set parameters]
       vpMe me;
       me.setMaskSize(5);
@@ -89,11 +93,11 @@ int main(int argc, char** argv)
       //! [Set parameters]
     }
     //! [Load cao]
-    if(vpIoTools::checkFilename(objectname + ".cao"))
+    if (vpIoTools::checkFilename(objectname + ".cao"))
       tracker.loadModel(objectname + ".cao");
     //! [Load cao]
     //! [Load wrl]
-    else if(vpIoTools::checkFilename(objectname + ".wrl"))
+    else if (vpIoTools::checkFilename(objectname + ".wrl"))
       tracker.loadModel(objectname + ".wrl");
     //! [Load wrl]
     //! [Set display]
@@ -103,7 +107,7 @@ int main(int argc, char** argv)
     tracker.initClick(I, objectname + ".init", true);
     //! [Init]
 
-    while(! g.end()){
+    while (!g.end()) {
       g.acquire(I);
       vpDisplay::display(I);
       //! [Track]
@@ -124,7 +128,7 @@ int main(int argc, char** argv)
     }
     vpDisplay::getClick(I);
   }
-  catch(vpException e) {
+  catch (vpException e) {
     std::cout << "Catch an exception: " << e << std::endl;
   }
 #else

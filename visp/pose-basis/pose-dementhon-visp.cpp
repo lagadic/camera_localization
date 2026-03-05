@@ -6,6 +6,10 @@
 #include <visp/vpMatrix.h>
 //! [Include]
 
+#ifdef ENABLE_VISP_NAMESPACE
+using namespace VISP_NAMESPACE_NAME;
+#endif
+
 //! [Estimation function]
 vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const std::vector< vpColVector > &x)
 //! [Estimation function]
@@ -14,7 +18,7 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
   int npoints = (int)wX.size();
   vpColVector r1, r2, r3;
   vpMatrix A(npoints, 4);
-  for(int i = 0; i < npoints; i++) {
+  for (int i = 0; i < npoints; i++) {
     for (int j = 0; j < 4; j++) {
       A[i][j] = wX[i][j];
     }
@@ -31,8 +35,8 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
   vpColVector Istar(3), Jstar(3);
 
   // POSIT loop
-  for(unsigned int iter = 0; iter < 20; iter ++) {
-    for(int i = 0; i < npoints; i++) {
+  for (unsigned int iter = 0; iter < 20; iter++) {
+    for (int i = 0; i < npoints; i++) {
       Bx[i] = x[i][0] * (eps[i] + 1.);
       By[i] = x[i][1] * (eps[i] + 1.);
     }
@@ -46,8 +50,8 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
     }
 
     // Estimation of the rotation matrix
-    double normI = sqrt( Istar.sumSquare() );
-    double normJ = sqrt( Jstar.sumSquare() );
+    double normI = sqrt(Istar.sumSquare());
+    double normJ = sqrt(Jstar.sumSquare());
     r1 = Istar / normI;
     r2 = Jstar / normJ;
     r3 = vpColVector::crossProd(r1, r2);
@@ -58,7 +62,7 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
     ty = tz * J[3][0];
 
     // Update epsilon_i
-    for(int i = 0; i < npoints; i++)
+    for (int i = 0; i < npoints; i++)
       eps[i] = (r3[0] * wX[i][0] + r3[1] * wX[i][1] + r3[2] * wX[i][2]) / tz;
   }
   //! [POSIT]
@@ -71,7 +75,7 @@ vpHomogeneousMatrix pose_dementhon(const std::vector< vpColVector > &wX, const s
   cTw[2][3] = tz;
   cTw[3][3] = 1.;
   // update rotation matrix
-  for(int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; i++) {
     cTw[0][i] = r1[i];
     cTw[1][i] = r2[i];
     cTw[2][i] = r3[i];
@@ -102,13 +106,13 @@ int main()
 
   // Input data: 3D coordinates of at least 4 non coplanar points
   double L = 0.2;
-  wX[0][0] =   -L; wX[0][1] = -L; wX[0][2] =  0;   wX[0][3] = 1; // wX_0 ( -L, -L,  0,   1)^T
-  wX[1][0] =    L; wX[1][1] = -L; wX[1][2] =  0.2; wX[1][3] = 1; // wX_1 (  L, -L,  0.2, 1)^T
-  wX[2][0] =    L; wX[2][1] =  L; wX[2][2] = -0.1; wX[2][3] = 1; // wX_2 (  L,  L, -0.1, 1)^T
-  wX[3][0] =   -L; wX[3][1] =  L; wX[3][2] =  0;   wX[3][3] = 1; // wX_3 ( -L,  L,  0,   1)^T
+  wX[0][0] = -L; wX[0][1] = -L; wX[0][2] = 0;   wX[0][3] = 1; // wX_0 ( -L, -L,  0,   1)^T
+  wX[1][0] = L; wX[1][1] = -L; wX[1][2] = 0.2; wX[1][3] = 1; // wX_1 (  L, -L,  0.2, 1)^T
+  wX[2][0] = L; wX[2][1] = L; wX[2][2] = -0.1; wX[2][3] = 1; // wX_2 (  L,  L, -0.1, 1)^T
+  wX[3][0] = -L; wX[3][1] = L; wX[3][2] = 0;   wX[3][3] = 1; // wX_3 ( -L,  L,  0,   1)^T
 
   // Input data: 2D coordinates of the points on the image plane
-  for(int i = 0; i < npoints; i++) {
+  for (int i = 0; i < npoints; i++) {
     vpColVector cX = cTw_truth * wX[i];     // Update cX, cY, cZ
     x[i][0] = cX[0] / cX[2]; // x = cX/cZ
     x[i][1] = cX[1] / cX[2]; // y = cY/cZ

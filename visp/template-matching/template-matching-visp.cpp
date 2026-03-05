@@ -9,12 +9,16 @@
 //! [Include]
 #include <visp/vpVideoReader.h>
 
-int main(int argc, char** argv)
+#ifdef ENABLE_VISP_NAMESPACE
+using namespace VISP_NAMESPACE_NAME;
+#endif
+
+int main(int argc, char **argv)
 {
 #if defined(VISP_HAVE_OPENCV) && (VISP_HAVE_OPENCV_VERSION >= 0x020100) || defined(VISP_HAVE_FFMPEG)
   std::string videoname = "bruegel.mpg";
 
-  for (int i=0; i<argc; i++) {
+  for (int i = 0; i<argc; i++) {
     if (std::string(argv[i]) == "--videoname")
       videoname = std::string(argv[i+1]);
     else if (std::string(argv[i]) == "--help") {
@@ -59,7 +63,7 @@ int main(int argc, char** argv)
   tracker.initClick(I);
   //! [Init]
 
-  while(! g.end()){
+  while (!g.end()) {
     g.acquire(I);
     vpDisplay::display(I);
 
