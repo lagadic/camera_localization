@@ -6,11 +6,15 @@
 #include <visp/vpMatrix.h>
 //! [Include]
 
+#ifdef ENABLE_VISP_NAMESPACE
+using namespace VISP_NAMESPACE_NAME;
+#endif
+
 //! [Estimation function]
 vpHomogeneousMatrix pose_gauss_newton(
-    #if VISP_VERSION_INT >= VP_VERSION_INT(2, 10, 0)
+#if VISP_VERSION_INT >= VP_VERSION_INT(2, 10, 0)
     const
-    #endif
+#endif
     std::vector< vpColVector > &wX, const std::vector< vpColVector > &x, const vpHomogeneousMatrix &cTw)
 //! [Estimation function]
 {
@@ -19,11 +23,11 @@ vpHomogeneousMatrix pose_gauss_newton(
   vpMatrix J(2*npoints, 6), Jp;
   vpColVector err, sd(2*npoints), s(2*npoints), xq(npoints*2), xn(npoints*2);
   vpHomogeneousMatrix cTw_ = cTw;
-  double residual=0, residual_prev, lambda = 0.25;
+  double residual = 0, residual_prev, lambda = 0.25;
 
   // From input vector x = (x, y, 1)^T we create a new one xn = (x, y)^T to ease computation of e_q
-  for (int i = 0; i < x.size(); i ++) {
-    xn[i*2]   = x[i][0]; // x
+  for (int i = 0; i < x.size(); i++) {
+    xn[i*2] = x[i][0]; // x
     xn[i*2+1] = x[i][1]; // y
   }
 
@@ -40,7 +44,7 @@ vpHomogeneousMatrix pose_gauss_newton(
       double yi = Yi / Zi;
 
       // Update x(q)
-      xq[i*2]   = xi;                                     // x(q) = cX/cZ
+      xq[i*2] = xi;                                     // x(q) = cX/cZ
       xq[i*2+1] = yi;                                     // y(q) = cY/cZ
 
       // Update J using equation (11)
@@ -97,13 +101,13 @@ int main()
 
   // Input data: 3D coordinates of at least 4 points
   double L = 0.2;
-  wX[0][0] =  -L; wX[0][1] = -L; wX[0][2] = 0; wX[0][3] = 1; // wX_0 ( -L, -L, 0, 1)^T
+  wX[0][0] = -L; wX[0][1] = -L; wX[0][2] = 0; wX[0][3] = 1; // wX_0 ( -L, -L, 0, 1)^T
   wX[1][0] = 2*L; wX[1][1] = -L; wX[1][2] = 0; wX[1][3] = 1; // wX_1 (-2L, -L, 0, 1)^T
-  wX[2][0] =   L; wX[2][1] =  L; wX[2][2] = 0; wX[2][3] = 1; // wX_2 (  L,  L, 0, 1)^T
-  wX[3][0] =  -L; wX[3][1] =  L; wX[3][2] = 0; wX[3][3] = 1; // wX_3 ( -L,  L, 0, 1)^T
+  wX[2][0] = L; wX[2][1] = L; wX[2][2] = 0; wX[2][3] = 1; // wX_2 (  L,  L, 0, 1)^T
+  wX[3][0] = -L; wX[3][1] = L; wX[3][2] = 0; wX[3][3] = 1; // wX_3 ( -L,  L, 0, 1)^T
 
   // Input data: 2D coordinates of the points on the image plane
-  for(int i = 0; i < npoints; i++) {
+  for (int i = 0; i < npoints; i++) {
     vpColVector cX = cTw_truth * wX[i];     // Update cX, cY, cZ
     x[i][0] = cX[0] / cX[2]; // x = cX/cZ
     x[i][1] = cX[1] / cX[2]; // y = cY/cZ
