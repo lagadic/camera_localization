@@ -10,8 +10,8 @@
 #if defined(HAVE_OPENCV_CALIB)
 #include <opencv2/calib.hpp>
 #endif
-#if defined(HAVE_OPENCV_3D)
-#include <opencv2/3d.hpp>
+#if defined(HAVE_OPENCV_GEOMETRY)
+#include <opencv2/geometry/3d.hpp>
 #endif
 //! [Include]
 
@@ -22,7 +22,8 @@ void exponential_map(const cv::Mat& v, cv::Mat& dt, cv::Mat& dR) {
   double vtux = v.at<double>(3, 0);
   double vtuy = v.at<double>(4, 0);
   double vtuz = v.at<double>(5, 0);
-  cv::Mat tu = (cv::Mat_<double>(3, 1) << vtux, vtuy, vtuz); // theta u
+  cv::Mat tu = cv::Mat_<double>(3, 1);
+  tu.at<double>(0,0) = vtux; tu.at<double>(1,0) = vtuy; tu.at<double>(2,0) = vtuz; // theta u
   cv::Rodrigues(tu, dR);
 
   double theta = sqrt(tu.dot(tu));
@@ -129,8 +130,10 @@ int main()
 
   //! [Simulation]
   // Ground truth pose used to generate the data
-  cv::Mat ctw_truth = (cv::Mat_<double>(3, 1) << -0.1, 0.1, 0.5); // Translation vector
-  cv::Mat crw_truth = (cv::Mat_<double>(3, 1) << CV_PI / 180 * (5), CV_PI / 180 * (0), CV_PI / 180 * (45)); // Rotation vector
+  cv::Mat ctw_truth = cv::Mat_<double>(3, 1);
+  ctw_truth.at<double>(0,0) = -0.1; ctw_truth.at<double>(1,0) = 0.1; ctw_truth.at<double>(2,0) = 0.5; // Translation vector
+  cv::Mat crw_truth = cv::Mat_<double>(3, 1);
+  crw_truth.at<double>(0,0) = CV_PI / 180 * (5); crw_truth.at<double>(1,0) = CV_PI / 180 * (0); crw_truth.at<double>(2,0) = CV_PI / 180 * (45); // Rotation vector
   cv::Mat cRw_truth(3, 3, CV_64FC1); // Rotation matrix
   cv::Rodrigues(crw_truth, cRw_truth);
 
@@ -151,8 +154,10 @@ int main()
 
   //! [Set pose initial value]
   // Initialize the pose to estimate near the solution
-  cv::Mat ctw = (cv::Mat_<double>(3, 1) << -0.05, 0.05, 0.45); // Initial translation
-  cv::Mat crw = (cv::Mat_<double>(3, 1) << CV_PI / 180 * (1), CV_PI / 180 * (0), CV_PI / 180 * (35)); // Initial rotation vector
+  cv::Mat ctw = cv::Mat_<double>(3, 1);
+  ctw.at<double>(0,0) = -0.05; ctw.at<double>(1,0) = 0.05; ctw.at<double>(2,0) = 0.45; // Initial translation
+  cv::Mat crw = cv::Mat_<double>(3, 1);
+  crw.at<double>(0,0) = CV_PI / 180 * (1); crw.at<double>(1,0) = CV_PI / 180 * (0); crw.at<double>(2,0) = CV_PI / 180 * (35); // Initial rotation vector
   cv::Mat cRw = cv::Mat::eye(3, 3, CV_64FC1); // Rotation matrix set to identity
   cv::Rodrigues(crw, cRw);
   //! [Set pose initial value]

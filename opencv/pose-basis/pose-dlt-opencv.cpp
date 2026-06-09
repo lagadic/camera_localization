@@ -10,8 +10,8 @@
 #if defined(HAVE_OPENCV_CALIB)
 #include <opencv2/calib.hpp>
 #endif
-#if defined(HAVE_OPENCV_3D)
-#include <opencv2/3d.hpp>
+#if defined(HAVE_OPENCV_GEOMETRY)
+#include <opencv2/geometry/3d.hpp>
 #endif
 //! [Include]
 
@@ -90,8 +90,10 @@ int main()
 
   //! [Simulation]
   // Ground truth pose used to generate the data
-  cv::Mat ctw_truth = (cv::Mat_<double>(3, 1) << -0.1, 0.1, 1.2); // Translation vector
-  cv::Mat crw_truth = (cv::Mat_<double>(3, 1) << CV_PI / 180 * (5), CV_PI / 180 * (0), CV_PI / 180 * (45)); // Rotation vector
+  cv::Mat ctw_truth = cv::Mat_<double>(3, 1);
+  ctw_truth.at<double>(0,0) = -0.1; ctw_truth.at<double>(1,0) = 0.1; ctw_truth.at<double>(2,0) = 1.2; // Translation vector
+  cv::Mat crw_truth = cv::Mat_<double>(3, 1);
+  crw_truth.at<double>(0,0) = CV_PI / 180 * (5); crw_truth.at<double>(1,0) = CV_PI / 180 * (0); crw_truth.at<double>(2,0) = CV_PI / 180 * (45); // Rotation vector
   cv::Mat cRw_truth(3, 3, cv::DataType<double>::type); // Rotation matrix
   cv::Rodrigues(crw_truth, cRw_truth);
 

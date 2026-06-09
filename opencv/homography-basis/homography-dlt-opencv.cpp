@@ -9,8 +9,8 @@
 #if defined(HAVE_OPENCV_CALIB)
 #include <opencv2/calib.hpp>
 #endif
-#if defined(HAVE_OPENCV_3D)
-#include <opencv2/3d.hpp>
+#if defined(HAVE_OPENCV_GEOMETRY)
+#include <opencv2/geometry/3d.hpp>
 #endif
 //! [Include]
 
@@ -94,13 +94,17 @@ int main()
 
   //! [Simulation]
   // Ground truth pose used to generate the data
-  cv::Mat c1tw_truth = (cv::Mat_<double>(3, 1) << -0.1, 0.1, 1.2); // Translation vector
-  cv::Mat c1rw_truth = (cv::Mat_<double>(3, 1) << CV_PI / 180 * (5), CV_PI / 180 * (0), CV_PI / 180 * (45)); // Rotation vector
+  cv::Mat c1tw_truth = cv::Mat_<double>(3, 1);
+  c1tw_truth.at<double>(0,0) = -0.1; c1tw_truth.at<double>(1,0) = 0.1; c1tw_truth.at<double>(2,0) = 1.2; // Translation vector
+  cv::Mat c1rw_truth = cv::Mat_<double>(3, 1);
+  c1rw_truth.at<double>(0,0) = CV_PI / 180 * (5); c1rw_truth.at<double>(1,0) = CV_PI / 180 * (0); c1rw_truth.at<double>(2,0) = CV_PI / 180 * (45); // Rotation vector
   cv::Mat c1Rw_truth(3, 3, cv::DataType<double>::type); // Rotation matrix
   cv::Rodrigues(c1rw_truth, c1Rw_truth);
 
-  cv::Mat c2tc1 = (cv::Mat_<double>(3, 1) << 0.01, 0.01, 0.2); // Translation vector
-  cv::Mat c2rc1 = (cv::Mat_<double>(3, 1) << CV_PI / 180 * (0), CV_PI / 180 * (3), CV_PI / 180 * (5)); // Rotation vector
+  cv::Mat c2tc1 = cv::Mat_<double>(3, 1); 
+  c2tc1.at<double>(0,0) = 0.01; c2tc1.at<double>(1,0) = 0.01; c2tc1.at<double>(2,0) = 0.2; // Translation vector
+  cv::Mat c2rc1 = cv::Mat_<double>(3, 1);
+  c2rc1.at<double>(0,0) = CV_PI / 180 * (0); c2rc1.at<double>(1,0) = CV_PI / 180 * (3); c2rc1.at<double>(2,0) = CV_PI / 180 * (5); // Rotation vector
   cv::Mat c2Rc1(3, 3, cv::DataType<double>::type); // Rotation matrix
   cv::Rodrigues(c2rc1, c2Rc1);
 
